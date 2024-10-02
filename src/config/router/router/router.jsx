@@ -1,8 +1,8 @@
 import React, { lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-const Login = lazy(() => import("../../pages/login/login"));
-const MainScreen = lazy(() => import("../../screens/mainScreen"));
+const Login = lazy(() => import("../../../pages/login/login"));
+const MainScreen = lazy(() => import("../../../screens/mainScreen"));
 
 const Router = () => {
   return (

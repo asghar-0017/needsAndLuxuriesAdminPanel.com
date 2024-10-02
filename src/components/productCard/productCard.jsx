@@ -1,29 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
   Typography,
-  IconButton,
-  Button,
   Badge,
   Rating,
 } from "@mui/material";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import PropTypes from "prop-types";
 
-const ProductCard = ({ product, currency }) => {
-  const [modalShow, setModalShow] = useState(false);
-
-  const discountedPrice = product.discountprice;
-  const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
-  const finalDiscountedPrice = discountedPrice
-    ? +(discountedPrice * currency.currencyRate).toFixed(2)
-    : null;
+const ProductCard = ({ product }) => {
+  // Check if product is defined before rendering
+  if (!product) {
+    return <div>Loading...</div>; // Handle the case where product is undefined
+  }
 
   return (
     <Card sx={{ maxWidth: 345, position: "relative" }}>
@@ -36,24 +26,36 @@ const ProductCard = ({ product, currency }) => {
           alt={product.title}
         />
 
-        {/* Badge for Sale and Discount */}
-        {product.sale && (
+{/* Badge for discount */}
+{product.discount && (
           <Badge
-            badgeContent={`-${product.discount}%`}
-            color="primary"
+            badgeContent={`13%`}
+            color="secondary"
             sx={{
               position: "absolute",
-              top: 10,
-              right: 10,
+              top: 20,
+              right: 30,
+              backgroundColor: "pink",
+              color: "white",
+            //   padding: " 12px",
+            }}
+          />
+        )}
+
+        {/* Badge for Sale */}
+        {product.sale && (
+          <Badge
+            badgeContent={`Sale`}
+            color="secondary"
+            sx={{
+              position: "absolute",
+              top: 50,
+              right: 30,
               backgroundColor: "purple",
               color: "white",
-              padding: "4px 8px",
+            //   padding: " 12px",
             }}
-          >
-            <Typography variant="button" color="white">
-              Sale
-            </Typography>
-          </Badge>
+          />
         )}
 
         <CardContent sx={{ textAlign: "center" }}>
@@ -63,69 +65,29 @@ const ProductCard = ({ product, currency }) => {
           </Typography>
 
           {/* Product Rating */}
-          {product.review && product.review > 0 ? (
-            <Rating value={product.review} readOnly />
-          ) : (
-            <Typography variant="body2" color="textSecondary">
-              No reviews yet
-            </Typography>
-          )}
+          <Rating value={product.review || 0} readOnly />
 
           {/* Product Price */}
           <div>
-            {finalDiscountedPrice !== null ? (
-              <Typography variant="h6" color="primary">
-                {currency.currencySymbol + finalDiscountedPrice}{" "}
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  sx={{ textDecoration: "line-through" }}
-                >
-                  {currency.currencySymbol + finalProductPrice}
-                </Typography>
-              </Typography>
-            ) : (
-              <Typography variant="h6">
-                {currency.currencySymbol + finalProductPrice}
-              </Typography>
-            )}
+            <Typography variant="h6">{product.price} €</Typography>
           </div>
         </CardContent>
       </CardActionArea>
-
-      {/* Action buttons */}
-      <CardActions sx={{ justifyContent: "center" }}>
-        <IconButton>
-          <FavoriteBorderIcon />
-        </IconButton>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<ShoppingCartIcon />}
-        >
-          Add to Cart
-        </Button>
-        <IconButton onClick={() => setModalShow(true)}>
-          <VisibilityIcon />
-        </IconButton>
-      </CardActions>
     </Card>
   );
 };
 
-ProductCard.propTypes = {
-  product: PropTypes.shape({
-    Imageurl: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    discountprice: PropTypes.number,
-    review: PropTypes.number,
-    sale: PropTypes.bool,
-  }).isRequired,
-  currency: PropTypes.shape({
-    currencyRate: PropTypes.number.isRequired,
-    currencySymbol: PropTypes.string.isRequired,
-  }).isRequired,
+// Dummy product to pass as props for testing the UI
+const product = {
+  Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+  title: "Leather Jacket",
+  price: "121.80",
+  sale: true,
+  discount:true,
+  review: 2.5
 };
 
-export default ProductCard;
+// Usage of the ProductCard component
+export default function ProductCardWrapper() {
+  return <ProductCard product={product} />;
+}

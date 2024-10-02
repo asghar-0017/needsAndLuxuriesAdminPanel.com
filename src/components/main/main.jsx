@@ -24,6 +24,7 @@ export default function Body({ open, body }) {
             duration: theme.transitions.duration.leavingScreen,
           }),
         pl: open ? `${260}px` : '80px',
+        width: "100%"
       }}
     >
       <DrawerHeader />

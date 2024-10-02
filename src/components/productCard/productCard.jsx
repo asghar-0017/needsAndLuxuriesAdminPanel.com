@@ -200,7 +200,7 @@ export default function ProductCardWrapper() {
       {/* Products Grid */}
       <Grid container spacing={4} justifyContent="center">
         {filteredProducts.map((product, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <Grid item xs={12} sm={6} md={3} lg={3} key={index}>
             <ProductCard product={product}/>
           </Grid>
         ))}

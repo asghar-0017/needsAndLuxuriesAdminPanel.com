@@ -1,5 +1,5 @@
 import axios from 'axios';
-import API_CONFIG from '../API/api';
+import API_CONFIG from '../api/api';
 import { showErrorToast } from '../../components/toast/toast';
 
 const { apiKey } = API_CONFIG;

@@ -9,6 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useLocation } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -42,6 +43,10 @@ export default function Navbar({ open, handleDrawerOpen }) {
     setAnchorEl(null);
   };
 
+  const location = useLocation();
+  const route = location.pathname.split("/");
+  const lastSegment = route.pop();  
+
   return (
     <AppBar position="fixed" open={open}>
       <Toolbar>
@@ -55,38 +60,40 @@ export default function Navbar({ open, handleDrawerOpen }) {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          Flone Website
+          Need and Luxurious
         </Typography>
 
-        {/* Search Input with Custom Color */}
+        {
+          lastSegment == "all-products" && 
         <TextField
           placeholder="Search"
           variant="outlined"
           size="small"
           sx={{
-            width: { xs: '6rem', md: 'auto' },
+            width: { xs: 0, sm: 'auto' },
             marginRight: 2,
+            visibility: { xs: 'hidden', sm: 'visible' }, 
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderColor: 'white', // Change border color
+                borderColor: 'white', 
               },
               '&:hover fieldset': {
-                borderColor: 'white', // Change hover border color
+                borderColor: 'white', 
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'white', // Change focused border color
+                borderColor: 'white', 
               },
             },
             '& .MuiInputBase-input': {
-              color: 'white', // Change text color
+              color: 'white', 
             },
           }}
           InputLabelProps={{
-            style: { color: 'white' }, // Change placeholder color
+            style: { color: 'white' },
           }}
-        />
+        />    
+      }
 
-        {/* Avatar Dropdown */}
         <IconButton onClick={handleMenuOpen} color="inherit">
           <Avatar
             alt="User Avatar"
@@ -102,9 +109,8 @@ export default function Navbar({ open, handleDrawerOpen }) {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <MenuItem onClick={handleMenuClose}>
-            Profile <span style={{ marginLeft: 'auto', fontSize: '0.8rem' }}>New</span>
+            Profile 
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
           <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
         </Menu>
       </Toolbar>

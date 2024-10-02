@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardActionArea,
@@ -12,24 +12,23 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  CircularProgress,
 } from "@mui/material";
+import { fetchData } from "../../config/apiServices/apiServices";
 
 const ProductCard = ({ product }) => {
   return (
     <Card sx={{ maxWidth: 500, position: "relative", m: 0 }}>
       <CardActionArea>
-        {/* Product Image */}
         <CardMedia
           component="img"
           height="300"
           image={product.Imageurl}
           alt={product.title}
         />
-
-        {/* Badge for Discount */}
-        {product.discount && (
+        {product.discountprice && (
           <Badge
-            badgeContent={`13%`}
+            badgeContent={`${product.discountprice}%`}
             color="secondary"
             sx={{
               position: "absolute",
@@ -41,7 +40,6 @@ const ProductCard = ({ product }) => {
           />
         )}
 
-        {/* Badge for Sale */}
         {product.sale && (
           <Badge
             badgeContent={`Sale`}
@@ -57,17 +55,24 @@ const ProductCard = ({ product }) => {
         )}
 
         <CardContent sx={{ textAlign: "center" }}>
-          {/* Product Title */}
           <Typography gutterBottom variant="h6" component="div">
             {product.title}
           </Typography>
-
-          {/* Product Rating */}
           <Rating value={product.review || 0} readOnly />
-
-          {/* Product Price */}
-          <div>
-            <Typography variant="h6">{product.price} €</Typography>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Typography variant="h6" sx={{ marginRight: 1 }}>
+              {product.newprice
+                ? `${product.newprice} €`
+                : `${product.price} €`}
+            </Typography>
+            {product.newprice && (
+              <Typography
+                variant="h6"
+                sx={{ color: "gray", textDecoration: "line-through" }}
+              >
+                {product.price} €
+              </Typography>
+            )}
           </div>
         </CardContent>
       </CardActionArea>
@@ -75,136 +80,69 @@ const ProductCard = ({ product }) => {
   );
 };
 
-// List of dummy products with categories
-const products = [
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Leather Jacket",
-    price: "121.80",
-    sale: true,
-    discount: true,
-    review: 2.5,
-    category: "Clothing",
-  },
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Summer Dress",
-    price: "99.99",
-    sale: true,
-    discount: true,
-    review: 4.0,
-    category: "Clothing",
-  },
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Sneakers",
-    price: "59.99",
-    sale: false,
-    discount: false,
-    review: 3.5,
-    category: "Footwear",
-  },
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Winter Coat",
-    price: "150.00",
-    sale: true,
-    discount: true,
-    review: 4.5,
-    category: "Clothing",
-  },
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Sunglasses",
-    price: "25.00",
-    sale: false,
-    discount: false,
-    review: 4.0,
-    category: "Accessories",
-  },
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Hat",
-    price: "20.00",
-    sale: false,
-    discount: false,
-    review: 4.2,
-    category: "Accessories",
-  },
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Running Shoes",
-    price: "80.00",
-    sale: true,
-    discount: true,
-    review: 3.8,
-    category: "Footwear",
-  },
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Denim Jacket",
-    price: "110.00",
-    sale: true,
-    discount: true,
-    review: 4.6,
-    category: "Clothing",
-  },
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Casual Shirt",
-    price: "35.00",
-    sale: false,
-    discount: false,
-    review: 3.0,
-    category: "Clothing",
-  },
-  {
-    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-    title: "Formal Suit",
-    price: "250.00",
-    sale: true,
-    discount: true,
-    review: 4.9,
-    category: "Clothing",
-  },
-];
-
-// Usage of the ProductCard component with responsive Grid layout and category filter
 export default function ProductCardWrapper() {
   const [category, setCategory] = useState("All");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Handle category change
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
   };
 
-  // Filter products by category
-  const filteredProducts =
-    category === "All"
-      ? products
-      : products.filter((product) => product.category === category);
+  // const filteredProducts =
+  //   category === "All"
+  //     ? products
+  //     : products.filter((product) => product.category === category);
+
+  useEffect(() => {
+    const fetchDataFromApi = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchData("get-product");
+        setProducts(response);
+      } catch (error) {
+        setError(error.message);
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDataFromApi();
+  }, []);
+
+  console.log(products);
 
   return (
     <div>
-      {/* Category Dropdown */}
-      <FormControl sx={{ m: 2, minWidth: 180 }}>
-        <InputLabel>Category</InputLabel>
-        <Select value={category} onChange={handleCategoryChange} label="Category">
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Clothing">Clothing</MenuItem>
-          <MenuItem value="Footwear">Footwear</MenuItem>
-          <MenuItem value="Accessories">Accessories</MenuItem>
-        </Select>
-      </FormControl>
+      {loading && <CircularProgress />}
+      {error && <Typography color="error">{error}</Typography>}
+      {!loading && !error && (
+        <>
+          <FormControl sx={{ m: 2, minWidth: 180 }}>
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={category}
+              onChange={handleCategoryChange}
+              label="Category"
+            >
+              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="Clothing">Clothing</MenuItem>
+              <MenuItem value="Footwear">Footwear</MenuItem>
+              <MenuItem value="Accessories">Accessories</MenuItem>
+            </Select>
+          </FormControl>
 
-      {/* Products Grid */}
-      <Grid container spacing={4} justifyContent="center">
-        {filteredProducts.map((product, index) => (
-          <Grid item xs={12} sm={6} md={3} lg={3} key={index}>
-            <ProductCard product={product}/>
+          <Grid container spacing={4} justifyContent="center">
+            {products.map((product, index) => (
+              <Grid item xs={12} sm={6} md={3} lg={3} key={index}>
+                <ProductCard product={product} />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        </>
+      )}
     </div>
   );
 }

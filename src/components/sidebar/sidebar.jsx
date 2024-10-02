@@ -10,9 +10,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import CategoryIcon from '@mui/icons-material/Category';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { Link } from 'react-router-dom'; 
 
 const drawerWidth = 240;
 
@@ -65,11 +66,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function Sidebar({ open, handleDrawerClose }) {
   const theme = useTheme();
 
-  // Define the sidebar items and their corresponding routes
   const sidebarItems = [
-    { text: 'Dashboard', icon: <InboxIcon />, route: '/' },
-    { text: 'Add Products', icon: <MailIcon />, route: '/add-products' },
-    { text: 'All Products', icon: <InboxIcon />, route: '/all-products' },
+    { text: 'Dashboard', icon: <DashboardIcon sx={{ color: 'blue' }}/>, route: '/' },
+    { text: 'Add Products', icon: <AddShoppingCartIcon sx={{ color: 'blue' }}/>, route: '/add-products' },
+    { text: 'All Products', icon: <CategoryIcon sx={{ color: 'blue' }}/>, route: '/all-products' },
   ];
 
   return (
@@ -83,7 +83,7 @@ export default function Sidebar({ open, handleDrawerClose }) {
       <List>
         {sidebarItems.map(({ text, icon, route }, index) => (
           <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <Link to={route} style={{ textDecoration: 'none', color: 'inherit' }}> {/* Link to route */}
+            <Link to={route} style={{ textDecoration: 'none', color: 'inherit' }}> 
               <ListItemButton
                 sx={{
                   minHeight: 48,

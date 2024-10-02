@@ -29,7 +29,7 @@ const MainScreen = () => {
     <Box sx={{ display: 'flex', width: "100%" }}>
       <CssBaseline />
       <Navbar open={open} handleDrawerOpen={handleDrawerOpen}/>
-      <div style={{width: "90%", margin: "0 auto"}}>
+      <div style={{width: "95%", margin: "0 auto"}}>
         <div>
           <Sidebar open={open} handleDrawerClose={handleDrawerClose}/>
         </div>

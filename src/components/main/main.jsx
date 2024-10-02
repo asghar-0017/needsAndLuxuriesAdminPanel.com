@@ -23,8 +23,11 @@ export default function Body({ open, body }) {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
           }),
-        pl: open ? `${260}px` : '80px',
-        width: "100%"
+          pl: {
+            xs: 0, 
+            sm: open ? `${260}px` : '80px', 
+          },      
+          width: "100%"
       }}
       className='main-box'
     >

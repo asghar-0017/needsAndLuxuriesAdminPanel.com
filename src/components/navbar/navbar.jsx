@@ -43,7 +43,7 @@ export default function Navbar({ open, handleDrawerOpen }) {
   };
 
   return (
-    <AppBar position="fixed" open={open}>
+    <AppBar position="fixed">
       <Toolbar>
         <IconButton
           color="inherit"
@@ -55,7 +55,7 @@ export default function Navbar({ open, handleDrawerOpen }) {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          Mini variant drawer
+          Flone
         </Typography>
 
         {/* Search Input with Custom Color */}

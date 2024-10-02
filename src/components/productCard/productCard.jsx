@@ -16,7 +16,7 @@ import {
 
 const ProductCard = ({ product }) => {
   return (
-    <Card sx={{ maxWidth: 345, position: "relative", m: 2 }}>
+    <Card sx={{ maxWidth: 500, position: "relative", m: 0 }}>
       <CardActionArea>
         {/* Product Image */}
         <CardMedia
@@ -198,7 +198,7 @@ export default function ProductCardWrapper() {
       </FormControl>
 
       {/* Products Grid */}
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={4} justifyContent="center">
         {filteredProducts.map((product, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <ProductCard product={product}/>

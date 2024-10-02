@@ -10,6 +10,8 @@ export const postData = async (endpoint, data) => {
         return response.data;
     } catch (error) {
         showErrorToast(error.message);
+        console.log(error);
+        
         throw new Error('Error posting data: ' + error.message);
     }
 };

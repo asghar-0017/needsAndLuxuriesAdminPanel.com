@@ -48,7 +48,7 @@ export default function Navbar({ open, handleDrawerOpen }) {
   const lastSegment = route.pop();  
 
   return (
-    <AppBar position="fixed" open={open}>
+    <AppBar position="fixed" open={open} style={{backgroundColor: "#F0E0FF"}}>
       <Toolbar>
         <IconButton
           color="inherit"
@@ -57,9 +57,9 @@ export default function Navbar({ open, handleDrawerOpen }) {
           edge="start"
           sx={{ marginRight: 5, ...(open && { display: 'none' }) }}
         >
-          <MenuIcon />
+          <MenuIcon sx={{color: "#313131"}}/>
         </IconButton>
-        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, color: "#313131", fontWeight: "bold", fontSize: "1.5rem" }}>
           Need and Luxurious
         </Typography>
 
@@ -75,21 +75,21 @@ export default function Navbar({ open, handleDrawerOpen }) {
             visibility: { xs: 'hidden', sm: 'visible' }, 
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderColor: 'white', 
+                borderColor: '#313131', 
               },
               '&:hover fieldset': {
-                borderColor: 'white', 
+                borderColor: '#313131', 
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'white', 
+                borderColor: '#313131', 
               },
             },
             '& .MuiInputBase-input': {
-              color: 'white', 
+              color: '#313131', 
             },
           }}
           InputLabelProps={{
-            style: { color: 'white' },
+            style: { color: '#313131' },
           }}
         />    
       }

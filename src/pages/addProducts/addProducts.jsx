@@ -34,33 +34,47 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const AddProducts = () => {
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
+  const { register, handleSubmit, watch, setValue, formState: { errors }, reset } = useForm();
   const [image, setImage] = React.useState(null);
   const [imagePreview, setImagePreview] = React.useState(null);
   const isSale = watch('sale'); 
 
   const onSubmit = async (data) => {
-    const requestData = {
-      image,
-      title: data.title,
-      price: data.price,
-      review: data.review,
-      description: data.description,
-      quantity: data.quantity,
-      discountPrice: isSale ? data.discountPrice : null, 
-      sale: isSale,
-      category: data.category,
-    };
-
+    if (!image) {
+      console.error('Error: Image is required');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('image', image);
+    formData.append('title', data.title);
+    formData.append('price', data.price);
+    formData.append('review', data.review);
+    formData.append('description', data.description);
+    formData.append('quantity', data.quantity);
+  
+    if (isSale && data.discountPrice !== undefined && data.discountPrice !== null) {
+      formData.append('discountprice', data.discountPrice);
+    }
+  
+    formData.append('sale', isSale);
+    formData.append('category', data.category);
+  
     try {
-      const response = await postData("create", requestData);
-      console.log('Response:', response);
-      showSuccessToast("Product uploaded successfully.")
+      const response = await postData("create", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      showSuccessToast("Product added successfully.");
+      reset(); 
+      setImage(null); 
+      setImagePreview(null);
     } catch (error) {
-      console.error('Error uploading data:', error);
+      console.error('Error adding product:', error);
     }
   };
-
+  
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     setImage(file);

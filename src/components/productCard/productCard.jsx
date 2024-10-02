@@ -15,6 +15,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { fetchData } from "../../config/apiServices/apiServices";
+import Loader from "../loader/loader";
 
 const ProductCard = ({ product }) => {
   return (
@@ -90,19 +91,19 @@ export default function ProductCardWrapper() {
     setCategory(event.target.value);
   };
 
-  // const filteredProducts =
-  //   category === "All"
-  //     ? products
-  //     : products.filter((product) => product.category === category);
+  const filteredProducts =
+    category === "All"
+      ? products
+      : products.filter((product) => product.category === category);
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
-      setLoading(true);
+      setLoading(true); 
       try {
-        const response = await fetchData("get-product");
-        setProducts(response);
+        const response = await fetchData("get-product"); 
+        setProducts(response); 
       } catch (error) {
-        setError(error.message);
+        setError(error.message); 
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
@@ -116,7 +117,7 @@ export default function ProductCardWrapper() {
 
   return (
     <div>
-      {loading && <CircularProgress />}
+      {loading && <Loader open={loading} />}
       {error && <Typography color="error">{error}</Typography>}
       {!loading && !error && (
         <>
@@ -128,14 +129,16 @@ export default function ProductCardWrapper() {
               label="Category"
             >
               <MenuItem value="All">All</MenuItem>
-              <MenuItem value="Clothing">Clothing</MenuItem>
-              <MenuItem value="Footwear">Footwear</MenuItem>
-              <MenuItem value="Accessories">Accessories</MenuItem>
+              <MenuItem value="dresses">Dresses</MenuItem>
+              <MenuItem value="tops">Tops</MenuItem>
+              <MenuItem value="skirts">Skirts</MenuItem>
+              <MenuItem value="pants">Pants</MenuItem>
+              <MenuItem value="jackets">Jackets</MenuItem>
             </Select>
           </FormControl>
 
           <Grid container spacing={4} justifyContent="center">
-            {products.map((product, index) => (
+            {filteredProducts.map((product, index) => (
               <Grid item xs={12} sm={6} md={3} lg={3} key={index}>
                 <ProductCard product={product} />
               </Grid>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardActionArea,
@@ -7,16 +7,16 @@ import {
   Typography,
   Badge,
   Rating,
+  Grid,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 
 const ProductCard = ({ product }) => {
-  // Check if product is defined before rendering
-  if (!product) {
-    return <div>Loading...</div>; // Handle the case where product is undefined
-  }
-
   return (
-    <Card sx={{ maxWidth: 345, position: "relative" }}>
+    <Card sx={{ maxWidth: 345, position: "relative", m: 2 }}>
       <CardActionArea>
         {/* Product Image */}
         <CardMedia
@@ -26,8 +26,8 @@ const ProductCard = ({ product }) => {
           alt={product.title}
         />
 
-{/* Badge for discount */}
-{product.discount && (
+        {/* Badge for Discount */}
+        {product.discount && (
           <Badge
             badgeContent={`13%`}
             color="secondary"
@@ -37,7 +37,6 @@ const ProductCard = ({ product }) => {
               right: 30,
               backgroundColor: "pink",
               color: "white",
-            //   padding: " 12px",
             }}
           />
         )}
@@ -53,7 +52,6 @@ const ProductCard = ({ product }) => {
               right: 30,
               backgroundColor: "purple",
               color: "white",
-            //   padding: " 12px",
             }}
           />
         )}
@@ -77,17 +75,136 @@ const ProductCard = ({ product }) => {
   );
 };
 
-// Dummy product to pass as props for testing the UI
-const product = {
-  Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-  title: "Leather Jacket",
-  price: "121.80",
-  sale: true,
-  discount:true,
-  review: 2.5
-};
+// List of dummy products with categories
+const products = [
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Leather Jacket",
+    price: "121.80",
+    sale: true,
+    discount: true,
+    review: 2.5,
+    category: "Clothing",
+  },
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Summer Dress",
+    price: "99.99",
+    sale: true,
+    discount: true,
+    review: 4.0,
+    category: "Clothing",
+  },
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Sneakers",
+    price: "59.99",
+    sale: false,
+    discount: false,
+    review: 3.5,
+    category: "Footwear",
+  },
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Winter Coat",
+    price: "150.00",
+    sale: true,
+    discount: true,
+    review: 4.5,
+    category: "Clothing",
+  },
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Sunglasses",
+    price: "25.00",
+    sale: false,
+    discount: false,
+    review: 4.0,
+    category: "Accessories",
+  },
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Hat",
+    price: "20.00",
+    sale: false,
+    discount: false,
+    review: 4.2,
+    category: "Accessories",
+  },
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Running Shoes",
+    price: "80.00",
+    sale: true,
+    discount: true,
+    review: 3.8,
+    category: "Footwear",
+  },
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Denim Jacket",
+    price: "110.00",
+    sale: true,
+    discount: true,
+    review: 4.6,
+    category: "Clothing",
+  },
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Casual Shirt",
+    price: "35.00",
+    sale: false,
+    discount: false,
+    review: 3.0,
+    category: "Clothing",
+  },
+  {
+    Imageurl: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+    title: "Formal Suit",
+    price: "250.00",
+    sale: true,
+    discount: true,
+    review: 4.9,
+    category: "Clothing",
+  },
+];
 
-// Usage of the ProductCard component
+// Usage of the ProductCard component with responsive Grid layout and category filter
 export default function ProductCardWrapper() {
-  return <ProductCard product={product} />;
+  const [category, setCategory] = useState("All");
+
+  // Handle category change
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  };
+
+  // Filter products by category
+  const filteredProducts =
+    category === "All"
+      ? products
+      : products.filter((product) => product.category === category);
+
+  return (
+    <div>
+      {/* Category Dropdown */}
+      <FormControl sx={{ m: 2, minWidth: 180 }}>
+        <InputLabel>Category</InputLabel>
+        <Select value={category} onChange={handleCategoryChange} label="Category">
+          <MenuItem value="All">All</MenuItem>
+          <MenuItem value="Clothing">Clothing</MenuItem>
+          <MenuItem value="Footwear">Footwear</MenuItem>
+          <MenuItem value="Accessories">Accessories</MenuItem>
+        </Select>
+      </FormControl>
+
+      {/* Products Grid */}
+      <Grid container spacing={2} justifyContent="center">
+        {filteredProducts.map((product, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <ProductCard product={product}/>
+          </Grid>
+        ))}
+      </Grid>
+    </div>
+  );
 }

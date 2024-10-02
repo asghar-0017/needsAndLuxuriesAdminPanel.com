@@ -2,15 +2,18 @@ import React, { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import CssBaseline from '@mui/material/CssBaseline';
+import { Box } from "@mui/material";
 
 const Navbar = lazy(() => import("../components/navbar/navbar"));
 const Sidebar = lazy(() => import("../components/sidebar/sidebar"));
 const DashBoard = lazy(() => import("../pages/dashBoard/dashboard"));
 const NotFound = lazy(() => import("../components/notFound/notFound"));
+const AddProducts = lazy(() => import("../pages/addProducts/addProducts"));
+const Body = lazy(() => import("../components/main/main"));
+const AllProducts = lazy(() => import("../pages/allProducts/allProducts"));
+
 
 import "../assets/styles/mainScreen.css";
-import { Box } from "@mui/material";
-import Body from "../components/main/main";
 
 const MainScreen = () => {
   const [open, setOpen] = React.useState(false);
@@ -34,6 +37,12 @@ const MainScreen = () => {
           <Routes>
             {/* DashBoard Route */}
             <Route path="/" element={<Body open={open} body={<DashBoard />}/>} />
+
+            {/* Add Products Route */}
+            <Route path="/add-products" element={<Body open={open} body={<AddProducts />}/>} />
+
+            {/* All Products Route */}
+            <Route path="/all-products" element={<Body open={open} body={<AllProducts />}/>} />
 
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />

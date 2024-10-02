@@ -1,6 +1,6 @@
 import React, { lazy } from 'react'
 
-const Router = lazy(() => import("./config/router/router/router"));
+const Router = lazy(() => import("./config/router/router"));
 
 const App = () => {
   return (

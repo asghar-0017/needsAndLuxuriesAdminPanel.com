@@ -26,6 +26,7 @@ export default function Body({ open, body }) {
         pl: open ? `${260}px` : '80px',
         width: "100%"
       }}
+      className='main-box'
     >
       <DrawerHeader />
       {body}

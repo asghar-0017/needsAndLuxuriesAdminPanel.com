@@ -26,14 +26,14 @@ const MainScreen = () => {
     setOpen(false);
   };
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', width: "100%" }}>
       <CssBaseline />
       <Navbar open={open} handleDrawerOpen={handleDrawerOpen}/>
-      <div className="main-cont">
-        <div className="left">
+      <div style={{width: "90%", margin: "0 auto"}}>
+        <div>
           <Sidebar open={open} handleDrawerClose={handleDrawerClose}/>
         </div>
-        <div className="right">
+        <div>
           <Routes>
             {/* DashBoard Route */}
             <Route path="/" element={<Body open={open} body={<DashBoard />}/>} />

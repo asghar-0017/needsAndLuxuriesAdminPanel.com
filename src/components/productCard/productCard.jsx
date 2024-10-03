@@ -88,6 +88,7 @@ const ProductCard = ({ product }) => {
 
 export default function ProductCardWrapper() {
   const [category, setCategory] = useState("All");
+  const [stock, setStock] = useState("All");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -96,19 +97,24 @@ export default function ProductCardWrapper() {
     setCategory(event.target.value);
   };
 
-  const filteredProducts =
-    category === "All"
-      ? products
-      : products.filter((product) => product.category === category);
+  const handleStockChange = (event) => {
+    setStock(event.target.value);
+  };
+
+  const filteredProducts = products.filter((product) => {
+    const categoryMatch = category === "All" || product.category === category;
+    const stockMatch = stock === "All" || product.stockStatus === stock;
+    return categoryMatch && stockMatch;
+  });
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
-      setLoading(true); 
+      setLoading(true);
       try {
         const response = await fetchData("get-product"); 
-        setProducts(response); 
+        setProducts(response);
       } catch (error) {
-        setError(error.message); 
+        setError(error.message);
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
@@ -117,8 +123,6 @@ export default function ProductCardWrapper() {
 
     fetchDataFromApi();
   }, []);
-
-  console.log(products);
 
   return (
     <div>
@@ -142,12 +146,29 @@ export default function ProductCardWrapper() {
             </Select>
           </FormControl>
 
+          <FormControl sx={{ m: 2, minWidth: 180 }}>
+            <InputLabel>Stock</InputLabel>
+            <Select
+              value={stock}
+              onChange={handleStockChange}
+              label="Stock"
+            >
+              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="In Stock">In Stock</MenuItem>
+              <MenuItem value="Out of Stock">Out of Stock</MenuItem>
+            </Select>
+          </FormControl>
+
           <Grid container spacing={4} justifyContent="center">
-            {filteredProducts.map((product, index) => (
-              <Grid item xs={12} sm={6} md={3} lg={3} key={index}>
-                <ProductCard product={product} />
-              </Grid>
-            ))}
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product, index) => (
+                <Grid item xs={12} sm={6} md={3} lg={3} key={index}>
+                  <ProductCard product={product} />
+                </Grid>
+              ))
+            ) : (
+              <Typography variant="h6">No products found.</Typography>
+            )}
           </Grid>
         </>
       )}

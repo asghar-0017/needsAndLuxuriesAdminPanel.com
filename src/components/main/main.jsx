@@ -1,7 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -24,7 +23,7 @@ export default function Body({ open, body }) {
             duration: theme.transitions.duration.leavingScreen,
           }),
           pl: {
-            xs: 0, 
+            xs: 8, 
             sm: open ? `${260}px` : '80px', 
           },      
           width: "100%"

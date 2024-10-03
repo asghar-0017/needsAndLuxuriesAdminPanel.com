@@ -16,10 +16,16 @@ import {
 } from "@mui/material";
 import { fetchData } from "../../config/apiServices/apiServices";
 import Loader from "../loader/loader";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/edit-product/${product._id}`, { state: product });
+  };
+
   return (
-    <Card sx={{ maxWidth: 500, position: "relative", m: 0 }}>
+    <Card sx={{ maxWidth: 500, position: "relative", m: 0 }} onClick={handleClick}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -40,7 +46,6 @@ const ProductCard = ({ product }) => {
             }}
           />
         )}
-
         {product.sale && (
           <Badge
             badgeContent={`Sale`}
@@ -54,7 +59,6 @@ const ProductCard = ({ product }) => {
             }}
           />
         )}
-
         <CardContent sx={{ textAlign: "center" }}>
           <Typography gutterBottom variant="h6" component="div">
             {product.title}
@@ -80,6 +84,7 @@ const ProductCard = ({ product }) => {
     </Card>
   );
 };
+
 
 export default function ProductCardWrapper() {
   const [category, setCategory] = useState("All");

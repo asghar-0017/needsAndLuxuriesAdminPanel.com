@@ -50,6 +50,17 @@ const OrderDetailPage = () => {
     fetchOrderDetails();
   }, [orderId]);
 
+  // Calculate the total price based on products and quantity
+  const calculateTotalPrice = () => {
+    if (!orderDetails) return 0;
+    return orderDetails.products.reduce(
+      (total, product) => total + product.price * product.quantity,
+      0
+    );
+  };
+
+  const totalPrice = calculateTotalPrice();
+
   return (
     <>
       {loading && <Loader open={loading} />}
@@ -154,6 +165,17 @@ const OrderDetailPage = () => {
                 </Box>
               </Box>
             ))}
+
+            {/* Total Price at the bottom right */}
+            <Box
+              display="flex"
+              justifyContent="flex-end"
+              sx={{ mt: 3, mr: 2 }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                {`Total Price: Rs ${totalPrice.toFixed(2)}`}
+              </Typography>
+            </Box>
           </Paper>
         </Container>
       )}

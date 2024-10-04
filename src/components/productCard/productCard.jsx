@@ -112,7 +112,7 @@ export default function ProductCardWrapper() {
       setLoading(true);
       try {
         const response = await fetchData("get-product"); 
-        setProducts(response);
+        setProducts(response.data);
       } catch (error) {
         setError(error.message);
         console.error("Error fetching data:", error);

@@ -1,6 +1,6 @@
 import React from "react";
 import ProductForm from "../../components/productForm/productForm"; 
-import { postData, updateData } from "../../config/apiServices/apiServices"; 
+import { updateData } from "../../config/apiServices/apiServices"; 
 import { useLocation, useNavigate } from "react-router-dom";
 import { showSuccessToast } from "../../components/toast/toast";
 import Loader from "../../components/loader/loader";

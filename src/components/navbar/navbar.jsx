@@ -64,9 +64,9 @@ export default function Navbar({ open, handleDrawerOpen }) {
         </Typography>
 
         {
-          lastSegment == "all-products" && 
+          (lastSegment === "all-products" || lastSegment === "order-details") && 
         <TextField
-          placeholder="Search"
+          placeholder={lastSegment === "all-products" ? "Search by Name" : "Search by Order Id"}
           variant="outlined"
           size="small"
           sx={{

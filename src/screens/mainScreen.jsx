@@ -12,6 +12,8 @@ const AddProducts = lazy(() => import("../pages/addProducts/addProducts"));
 const Body = lazy(() => import("../components/main/main"));
 const AllProducts = lazy(() => import("../pages/allProducts/allProducts"));
 const EditProductPage = lazy(() => import("../pages/editProduct/editProduct"));
+const OrderDetails = lazy(() => import("../pages/orderDetails/orderDetails"));
+const Orders = lazy(() => import("../components/orders/orders"));
 
 import "../assets/styles/mainScreen.css";
 
@@ -43,6 +45,12 @@ const MainScreen = () => {
 
             {/* All Products Route */}
             <Route path="/all-products" element={<Body open={open} body={<AllProducts />}/>} />
+
+            {/* Order Details Route */}
+            <Route path="/order-details" element={<Body open={open} body={<OrderDetails />}/>} />
+
+            {/* Order Route */}
+            <Route path="/order/:orderId" element={<Body open={open} body={<Orders />}/>} />
 
              {/* Edit Products Route */}
              <Route path="/edit-product/:_id" element={<Body open={open} body={<EditProductPage />}/>} />

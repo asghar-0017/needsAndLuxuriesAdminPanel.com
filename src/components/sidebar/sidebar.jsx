@@ -13,6 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CategoryIcon from '@mui/icons-material/Category';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import DetailsIcon from '@mui/icons-material/Details';
 import { Link } from 'react-router-dom'; 
 
 const drawerWidth = 240;
@@ -70,6 +71,7 @@ export default function Sidebar({ open, handleDrawerClose }) {
     { text: 'Dashboard', icon: <DashboardIcon sx={{ color: '#313131' }}/>, route: '/' },
     { text: 'Add Products', icon: <AddShoppingCartIcon sx={{ color: '#313131' }}/>, route: '/add-products' },
     { text: 'All Products', icon: <CategoryIcon sx={{ color: '#313131' }}/>, route: '/all-products' },
+    { text: 'Order Details', icon: <DetailsIcon sx={{ color: '#313131' }}/>, route: '/order-details' },
   ];
 
   return (

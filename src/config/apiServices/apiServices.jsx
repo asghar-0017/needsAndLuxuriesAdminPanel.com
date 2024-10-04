@@ -27,7 +27,7 @@ export const updateData = async (endpoint, data) => {
 export const fetchData = async (endpoint) => {
     try {
         const response = await axios.get(`${apiKey}/${endpoint}`);
-        return response.data.data;
+        return response.data;
     } catch (error) {
         throw new Error('Error fetching data: ' + error.message);
     }

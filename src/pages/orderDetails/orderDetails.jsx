@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Container,
   Grid,
@@ -28,6 +28,7 @@ import { showSuccessToast } from "../../components/toast/toast";
 import Swal from "sweetalert2";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { ContentCopy } from "@mui/icons-material";
+import { SearchContext } from "../../context/context";
 
 const OrderDetailsPage = () => {
   const [products, setProducts] = useState([]);
@@ -38,6 +39,9 @@ const OrderDetailsPage = () => {
   const [disabledButtons, setDisabledButtons] = useState({});
 
   const navigate = useNavigate();
+  const { searchQuery } = useContext(SearchContext);
+  console.log(searchQuery);
+  
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
@@ -87,10 +91,17 @@ const OrderDetailsPage = () => {
     setStatus(event.target.value);
   };
 
+  console.log(searchQuery);
+  
   const filteredProducts = products.filter((product) => {
     const statusMatch = status === "All" || product.orderStatus === status;
-    return statusMatch;
-  });
+    const orderIdMatch = searchQuery.trim() === ""
+      ? true 
+      : product.orderId.toString().includes(searchClientId.trim()); 
+      
+      
+      return statusMatch && orderIdMatch;
+    });
 
   const handleOrderStatusChange = async (orderId, newStatus) => {
     const result = await Swal.fire({

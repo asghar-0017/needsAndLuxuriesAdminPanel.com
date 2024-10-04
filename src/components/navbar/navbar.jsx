@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,8 +10,7 @@ import TextField from '@mui/material/TextField';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useLocation } from 'react-router-dom';
-
-const drawerWidth = 240;
+import { SearchContext } from '../../context/context';
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -22,8 +21,8 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: 240,
+    width: `calc(100% - 240px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -35,20 +34,17 @@ export default function Navbar({ open, handleDrawerOpen }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
+  const { searchQuery, setSearchQuery } = useContext(SearchContext); // Access context
   const location = useLocation();
   const route = location.pathname.split("/");
-  const lastSegment = route.pop();  
+  const lastSegment = route.pop();
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value); // Update the search input in context
+  };
 
   return (
-    <AppBar position="fixed" open={open} style={{backgroundColor: "#F0E0FF"}}>
+    <AppBar position="fixed" open={open} style={{ backgroundColor: "#F0E0FF" }}>
       <Toolbar>
         <IconButton
           color="inherit"
@@ -57,61 +53,44 @@ export default function Navbar({ open, handleDrawerOpen }) {
           edge="start"
           sx={{ marginRight: 5, ...(open && { display: 'none' }) }}
         >
-          <MenuIcon sx={{color: "#313131"}}/>
+          <MenuIcon sx={{ color: "#313131" }} />
         </IconButton>
-        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, color: "#313131", fontWeight: "bold", fontSize: "1.5rem" }}>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{ flexGrow: 1, color: "#313131", fontWeight: "bold", fontSize: "1.5rem" }}
+        >
           Need and Luxurious
         </Typography>
 
-        {
-          (lastSegment === "all-products" || lastSegment === "order-details") && 
-        <TextField
-          placeholder={lastSegment === "all-products" ? "Search by Name" : "Search by Order Id"}
-          variant="outlined"
-          size="small"
-          sx={{
-            width: { xs: 0, sm: 'auto' },
-            marginRight: 2,
-            visibility: { xs: 'hidden', sm: 'visible' }, 
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#313131', 
+        {(lastSegment === "all-products" || lastSegment === "order-details") && (
+          <TextField
+            placeholder={lastSegment === "all-products" ? "Search by Name" : "Search by Order Id"}
+            variant="outlined"
+            size="small"
+            sx={{
+              width: { xs: 0, sm: 'auto' },
+              marginRight: 2,
+              visibility: { xs: 'hidden', sm: 'visible' },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: '#313131' },
+                '&:hover fieldset': { borderColor: '#313131' },
+                '&.Mui-focused fieldset': { borderColor: '#313131' },
               },
-              '&:hover fieldset': {
-                borderColor: '#313131', 
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#313131', 
-              },
-            },
-            '& .MuiInputBase-input': {
-              color: '#313131', 
-            },
-          }}
-          InputLabelProps={{
-            style: { color: '#313131' },
-          }}
-        />    
-      }
-
-        <IconButton onClick={handleMenuOpen} color="inherit">
-          <Avatar
-            alt="User Avatar"
-            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+              '& .MuiInputBase-input': { color: '#313131' },
+            }}
+            value={searchQuery} // Bind searchQuery from context
+            onChange={handleSearchChange} // Update search input on change
           />
+        )}
+
+        <IconButton onClick={() => setAnchorEl(true)} color="inherit">
+          <Avatar alt="User Avatar" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
         </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={openMenu}
-          onClose={handleMenuClose}
-          PaperProps={{ elevation: 3 }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <MenuItem onClick={handleMenuClose}>
-            Profile 
-          </MenuItem>
-          <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+        <Menu anchorEl={anchorEl} open={openMenu} onClose={() => setAnchorEl(null)}>
+          <MenuItem onClick={() => setAnchorEl(null)}>Profile</MenuItem>
+          <MenuItem onClick={() => setAnchorEl(null)}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

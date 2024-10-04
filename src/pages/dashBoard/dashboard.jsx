@@ -12,10 +12,10 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { fetchData } from "../../config/apiServices/apiServices"; 
+import { fetchData } from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
-import { CheckCircle, Cancel, AccessTime } from "@mui/icons-material"; 
+import { CheckCircle, Cancel, AccessTime } from "@mui/icons-material";
 
 const Dashboard = () => {
   const [barChartData, setBarChartData] = useState([]);
@@ -36,9 +36,15 @@ const Dashboard = () => {
         const products = response.result;
 
         const total = products.length;
-        const pending = products.filter((order) => order.orderStatus === "Pending").length;
-        const dispatched = products.filter((order) => order.orderStatus === "Dispatched").length;
-        const cancelled = products.filter((order) => order.orderStatus === "Cancelled").length;
+        const pending = products.filter(
+          (order) => order.orderStatus === "Pending"
+        ).length;
+        const dispatched = products.filter(
+          (order) => order.orderStatus === "Dispatched"
+        ).length;
+        const cancelled = products.filter(
+          (order) => order.orderStatus === "Cancelled"
+        ).length;
 
         setTotalOrders(total);
         setPendingOrders(pending);
@@ -53,7 +59,6 @@ const Dashboard = () => {
 
         setBarChartData(formattedData);
         setPieChartData(formattedData);
-
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -157,7 +162,10 @@ const Dashboard = () => {
                   <Legend />
                   <Bar dataKey="value">
                     {barChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Bar>
                 </BarChart>
@@ -179,7 +187,10 @@ const Dashboard = () => {
                     dataKey="value"
                   >
                     {pieChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -188,8 +199,8 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </Grid>
           </Grid>
-          </>
-          )}
+        </>
+      )}
     </div>
   );
 };

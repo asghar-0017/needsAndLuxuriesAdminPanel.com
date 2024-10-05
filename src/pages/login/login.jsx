@@ -1,90 +1,132 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom'; 
-import Swal from 'sweetalert2'; 
-import '../../assets/styles/mainScreen.css';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "../../assets/styles/mainScreen.css";
 import { postData } from "../../config/apiServices/apiServices";
+import LoadingBar from "react-top-loading-bar";
 
 const Login = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); 
+  const [progress, setProgress] = useState(0);
+  const navigate = useNavigate();
 
-  
   const onSubmit = async (data) => {
     setLoading(true);
     setError(null);
-    console.log(data)
-    
+    setProgress(50);
     try {
-      const response = await postData("auth", data); 
-      console.log(response)
+      const response = await postData(
+        "auth",
+        data
+      );
+      console.log(response);
 
-      // SweetAlert for successful login
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: 'Redirecting to the main dashboard...',
-        timer: 2000,
-        showConfirmButton: false
-      });
+      localStorage.setItem(
+        "token",
+        response.token
+      );
 
+      // Swal.fire({
+      //   icon: "success",
+      //   title: "Login Successful",
+      //   text: "Redirecting to the main dashboard...",
+      //   timer: 2000,
+      //   showConfirmButton: false,
+      // });
+
+      setProgress(100);
       setTimeout(() => {
-        navigate('/'); 
+        navigate("/");
       }, 2000);
-      
     } catch (error) {
       setError(error.message);
-      
+
       // SweetAlert for login error
       Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: error.message
+        icon: "error",
+        title: "Login Failed",
+        text: error.message,
       });
     } finally {
       setLoading(false);
+      setProgress(100);
     }
   };
 
   return (
     <div className="mainForm">
+      <LoadingBar
+        color="#4599B4"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <div className="form-container">
         <div className="logo-container">
-          Admin SignIn
+          Admin Login
         </div>
 
-        <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="form"
+          onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
-            <label htmlFor="email">Username</label>
+            <label htmlFor="email">
+              Username
+            </label>
             <input
               type="text"
               id="userName"
-              {...register('userName', { required: 'Username is required' })}
+              {...register("userName", {
+                required: "Username is required",
+              })}
               placeholder="Enter your Username"
             />
-            {errors.email && <p className="error-message">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="error-message">
+                {errors.email.message}
+              </p>
+            )}
 
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">
+              Password
+            </label>
             <input
               type="password"
               id="password"
-              {...register('password', { required: 'Password is required' })}
+              {...register("password", {
+                required: "Password is required",
+              })}
               placeholder="Enter your password"
             />
-            {errors.password && <p className="error-message">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="error-message">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
-          <button className="form-submit-btn" type="submit" disabled={loading}>
-            {loading ? 'Logging In...' : 'LogIn'}
+          <button
+            className="form-submit-btn"
+            type="submit"
+            disabled={loading}>
+            {loading ? "Logging In..." : "LogIn"}
           </button>
         </form>
 
-        {error && <p className="error-message">{error}</p>}
+        {error && (
+          <p className="error-message">{error}</p>
+        )}
 
         <p className="signup-link">
-          <a href="#" className="signup-link link">
+          <a
+            href="#"
+            className="signup-link link">
             Forgot Password
           </a>
         </p>

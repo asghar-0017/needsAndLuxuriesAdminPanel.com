@@ -154,7 +154,9 @@ export default function OTPInput() {
         );
         setTimeout(() => {
           setProgress(100);
-          navigate("/forgot-password");
+          navigate("/forgot-password", {
+            state: { fromSentEmail: true },
+          });
         }, 2000);
       } else {
         Swal.fire({

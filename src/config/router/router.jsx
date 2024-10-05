@@ -4,9 +4,6 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import ResetEmail from "../../pages/resetEmail/resetEmail";
-import OTP from "../../pages/otp/otp";
-import ForgotPassword from "../../pages/forgotPassword/forgotPassword";
 
 const Login = lazy(() =>
   import("../../pages/login/login")
@@ -16,6 +13,20 @@ const Protected = lazy(() =>
 );
 const MainScreen = lazy(() =>
   import("../../screens/mainScreen")
+);
+
+const ResetEmail = lazy(() =>
+  import("../../pages/resetEmail/resetEmail")
+);
+
+const OTP = lazy(() =>
+  import("../../pages/otp/otp")
+);
+
+const ForgotPassword = lazy(() =>
+  import(
+    "../../pages/forgotPassword/forgotPassword"
+  )
 );
 
 const Router = () => {

@@ -21,7 +21,6 @@ const ResetEmail = () => {
     setLoading(true);
     setError(null);
     setProgress(50);
-    console.log(data);
     try {
       const response = await postData(
         "forgot-password",

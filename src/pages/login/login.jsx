@@ -29,8 +29,6 @@ const Login = () => {
         "auth",
         data
       );
-      console.log(response);
-
       localStorage.setItem(
         "token",
         response.token

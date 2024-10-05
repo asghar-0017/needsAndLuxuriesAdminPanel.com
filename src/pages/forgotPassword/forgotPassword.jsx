@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Swal from "sweetalert2";
 import "../../assets/styles/mainScreen.css";
-import { postData } from "../../config/apiServices/apiServices";
+import { updateData } from "../../config/apiServices/apiServices";
 import LoadingBar from "react-top-loading-bar";
 import { showSuccessToast } from "../../components/toast/toast";
 
@@ -26,35 +30,34 @@ const ForgotPassword = () => {
     "confirmPassword"
   );
 
+  const location = useLocation();
+
+  // Check if the state is passed, if not redirect
+  if (
+    !location.state ||
+    !location.state.fromSentEmail
+  ) {
+    return <Navigate to="/" />;
+  }
+
   const onSubmit = async (data) => {
     setLoading(true);
     setError(null);
     setProgress(50);
 
+    console.log(data.password);
+
     try {
-      const res = await postData(
+      const res = await updateData(
         "reset-password",
         {
-          newPassword: data.password,
+          password: data.password,
         }
       );
-
-      console.log(res);
-
-      if (res.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Password updated successfully!",
-        });
-        navigate("/login");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to update the password. Please try again.",
-        });
-      }
+      showSuccessToast(
+        "Password updated successfully"
+      );
+      navigate("/login");
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -92,9 +95,9 @@ const ForgotPassword = () => {
               {...register("password", {
                 required: "Password is required",
                 minLength: {
-                  value: 6,
+                  value: 5,
                   message:
-                    "Password must be at least 6 characters",
+                    "Password must be at least 5 characters",
                 },
               })}
               placeholder="Enter your password"

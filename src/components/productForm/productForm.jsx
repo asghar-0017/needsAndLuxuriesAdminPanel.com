@@ -100,10 +100,13 @@ const ProductForm = ({
       data.materials.join(",")
     );
     formData.append("size", data.size);
-    formData.append(
-      "stockStatus",
-      data.stockStatus
-    );
+    {
+      initialValues._id &&
+        formData.append(
+          "stockStatus",
+          data.stockStatus
+        );
+    }
 
     if (isSale && data.discountPrice) {
       formData.append(
@@ -115,6 +118,10 @@ const ProductForm = ({
     formData.append("sale", isSale);
     formData.append("category", data.category);
     setLoading(true);
+
+    // formData.forEach((value, key) => {
+    //   console.log(`${key}:`, value);
+    // });
     try {
       await onSubmitSuccess(formData);
       reset();

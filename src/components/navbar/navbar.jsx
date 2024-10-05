@@ -14,7 +14,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useLocation } from "react-router-dom";
 import { SearchContext } from "../../context/context";
-import handleLogout from "../Logout/logout";
+import handleLogout from "../logout/logout";
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",

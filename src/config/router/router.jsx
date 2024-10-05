@@ -4,6 +4,9 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import ResetEmail from "../../pages/resetEmail/resetEmail";
+import OTP from "../../pages/otp/otp";
+import ForgotPassword from "../../pages/forgotPassword/forgotPassword";
 
 const Login = lazy(() =>
   import("../../pages/login/login")
@@ -24,6 +27,21 @@ const Router = () => {
           <Route
             path="/login"
             element={<Login />}
+          />
+
+          {/* Reset Email Page */}
+          <Route
+            path="/reset-email"
+            element={<ResetEmail />}
+          />
+
+          {/* OTP Page */}
+          <Route path="/otp" element={<OTP />} />
+
+          {/* Forgot Password */}
+          <Route
+            path="/forgot-password"
+            element={<ForgotPassword />}
           />
 
           {/* Main Screen */}

@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "../../assets/styles/mainScreen.css";
 import { postData } from "../../config/apiServices/apiServices";
 import LoadingBar from "react-top-loading-bar";
 
-const Login = () => {
+const ResetEmail = () => {
   const {
     register,
     handleSubmit,
@@ -24,26 +21,21 @@ const Login = () => {
     setLoading(true);
     setError(null);
     setProgress(50);
+    console.log(data);
     try {
       const response = await postData(
-        "auth",
+        "forgot-password",
         data
-      );
-      console.log(response);
-
-      localStorage.setItem(
-        "token",
-        response.token
       );
       setTimeout(() => {
         setProgress(100);
-        navigate("/");
+        navigate("/otp");
       }, 2000);
     } catch (error) {
       setError(error.message);
       Swal.fire({
         icon: "error",
-        title: "Login Failed",
+        title: "Failed to send email",
         text: error.message,
       });
     } finally {
@@ -61,44 +53,25 @@ const Login = () => {
       />
       <div className="form-container">
         <div className="logo-container">
-          Admin Login
+          Reset Email
         </div>
 
         <form
           className="form"
           onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
-            <label htmlFor="email">
-              Username
-            </label>
+            <label htmlFor="email">Email</label>
             <input
-              type="text"
-              id="userName"
-              {...register("userName", {
-                required: "Username is required",
+              type="email"
+              id="email"
+              {...register("email", {
+                required: "Email is required",
               })}
-              placeholder="Enter your Username"
+              placeholder="Enter your Email"
             />
             {errors.email && (
               <p className="error-message">
                 {errors.email.message}
-              </p>
-            )}
-
-            <label htmlFor="password">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              {...register("password", {
-                required: "Password is required",
-              })}
-              placeholder="Enter your password"
-            />
-            {errors.password && (
-              <p className="error-message">
-                {errors.password.message}
               </p>
             )}
           </div>
@@ -107,24 +80,17 @@ const Login = () => {
             className="form-submit-btn"
             type="submit"
             disabled={loading}>
-            {loading ? "Logging In..." : "LogIn"}
+            {loading
+              ? "Sending Email..."
+              : "Send"}
           </button>
         </form>
-
         {error && (
           <p className="error-message">{error}</p>
         )}
-
-        <p className="signup-link">
-          <Link
-            to="/reset-email"
-            className="signup-link link">
-            Forgot Password
-          </Link>
-        </p>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ResetEmail;

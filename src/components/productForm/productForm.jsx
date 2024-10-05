@@ -13,6 +13,7 @@ import {
   Grid,
   IconButton,
   FormGroup,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
@@ -34,8 +35,11 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
-    let navigate = useNavigate()
+const ProductForm = ({
+  initialValues = {},
+  onSubmitSuccess,
+}) => {
+  let navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -46,21 +50,32 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
   } = useForm({
     defaultValues: {
       ...initialValues,
-      discountPrice: initialValues.discountprice || "",
-      sale: initialValues.discountprice ? true : false,
-      stockStatus: initialValues.stockStatus || "",
+      discountPrice:
+        initialValues.discountprice || "",
+      sale: initialValues.discountprice
+        ? true
+        : false,
+      stockStatus:
+        initialValues.stockStatus || "",
+      materials: initialValues.materials || [],
     },
   });
 
+  const [loading, setLoading] = useState(false);
+
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(
-    initialValues?.Imageurl || null
-  );
+  const [imagePreview, setImagePreview] =
+    useState(initialValues?.Imageurl || null);
   const isSale = watch("sale");
 
   const sizes = ["S", "M", "L", "XL", "XXL"];
   const stock = ["In Stock", "Out of Stock"];
-  const materials = ["Polyester", "Cotton", "Silk", "Wool"];
+  const materials = [
+    "Polyester",
+    "Cotton",
+    "Silk",
+    "Wool",
+  ];
 
   const onSubmit = async (data) => {
     if (!image && !initialValues?.Imageurl) {
@@ -74,27 +89,44 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
     formData.append("title", data.title);
     formData.append("price", data.price);
     formData.append("review", data.review);
-    formData.append("description", data.description);
+    formData.append(
+      "description",
+      data.description
+    );
     formData.append("Quantity", data.Quantity);
     formData.append("weight", data.weight);
-    formData.append("materials", data.materials.join(","));
+    formData.append(
+      "materials",
+      data.materials.join(",")
+    );
     formData.append("size", data.size);
-    formData.append("stockStatus", data.stockStatus);
+    formData.append(
+      "stockStatus",
+      data.stockStatus
+    );
 
     if (isSale && data.discountPrice) {
-      formData.append("discountprice", data.discountPrice);
+      formData.append(
+        "discountprice",
+        data.discountPrice
+      );
     }
 
     formData.append("sale", isSale);
     formData.append("category", data.category);
-
+    setLoading(true);
     try {
       await onSubmitSuccess(formData);
       reset();
       setImage(null);
       setImagePreview(null);
     } catch (error) {
-      console.error("Error submitting product:", error);
+      console.error(
+        "Error submitting product:",
+        error
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -117,36 +149,56 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
 
   const handleDiscountPriceChange = (event) => {
     const value = Number(event.target.value);
-    setValue("discountPrice", Math.min(Math.max(value, 0), 100));
+    setValue(
+      "discountPrice",
+      Math.min(Math.max(value, 0), 100)
+    );
   };
 
   const handleReviewChange = (event) => {
     const value = Number(event.target.value);
-    setValue("review", Math.min(Math.max(value, 0), 5));
+    setValue(
+      "review",
+      Math.min(Math.max(value, 0), 5)
+    );
   };
 
   const handleMaterialChange = (event) => {
     const { value, checked } = event.target;
-    const currentMaterials = watch("materials") || [];
+    const currentMaterials =
+      watch("materials") || [];
 
     if (checked) {
-      setValue("materials", [...currentMaterials, value]);
+      setValue("materials", [
+        ...currentMaterials,
+        value,
+      ]);
     } else {
       setValue(
         "materials",
-        currentMaterials.filter((material) => material !== value)
+        currentMaterials.filter(
+          (material) => material !== value
+        )
       );
     }
   };
 
   const handleDelete = async () => {
     try {
-      let response = await deleteDataById("product-delete", initialValues._id);
+      let response = await deleteDataById(
+        "product-delete",
+        initialValues._id
+      );
       console.log(response);
-      showSuccessToast("Product deleted successfully.");
-      navigate(-1)
+      showSuccessToast(
+        "Product deleted successfully."
+      );
+      navigate(-1);
     } catch (error) {
-      console.error("Error deleting product:", error);
+      console.error(
+        "Error deleting product:",
+        error
+      );
     }
   };
 
@@ -161,22 +213,33 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
         borderRadius: 2,
         boxShadow: 3,
         backgroundColor: "#fff",
-      }}
-    >
-      <Typography variant="h4" fontWeight={"bold"} gutterBottom align="center">
-        {initialValues._id ? "Edit Product" : "Add Product"}
+      }}>
+      <Typography
+        variant="h4"
+        fontWeight={"bold"}
+        gutterBottom
+        align="center">
+        {initialValues._id
+          ? "Edit Product"
+          : "Add Product"}
       </Typography>
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <TextField
-            {...register("title", { required: "Title is required" })}
+            {...register("title", {
+              required: "Title is required",
+            })}
             label="Title"
             variant="outlined"
             fullWidth
             margin="normal"
             error={!!errors.title}
-            helperText={errors.title ? errors.title.message : ""}
+            helperText={
+              errors.title
+                ? errors.title.message
+                : ""
+            }
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -191,12 +254,18 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
             fullWidth
             margin="normal"
             error={!!errors.price}
-            helperText={errors.price ? errors.price.message : ""}
+            helperText={
+              errors.price
+                ? errors.price.message
+                : ""
+            }
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            {...register("review", { required: "Review is required" })}
+            {...register("review", {
+              required: "Review is required",
+            })}
             label="Review"
             type="number"
             variant="outlined"
@@ -204,7 +273,11 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
             margin="normal"
             onChange={handleReviewChange}
             error={!!errors.review}
-            helperText={errors.review ? "Review must be between 0 and 5" : ""}
+            helperText={
+              errors.review
+                ? "Review must be between 0 and 5"
+                : ""
+            }
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -219,33 +292,57 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
             fullWidth
             margin="normal"
             error={!!errors.Quantity}
-            helperText={errors.Quantity ? errors.Quantity.message : ""}
+            helperText={
+              errors.Quantity
+                ? errors.Quantity.message
+                : ""
+            }
           />
         </Grid>
 
         <Grid item xs={12} md={6}>
           <FormControl margin="normal" fullWidth>
-            <InputLabel id="category-label">Category</InputLabel>
+            <InputLabel id="category-label">
+              Category
+            </InputLabel>
             <Select
-              {...register("category", { required: "Category is required" })}
+              {...register("category", {
+                required: "Category is required",
+              })}
               labelId="category-label"
-              defaultValue={initialValues.category || ""}
+              defaultValue={
+                initialValues.category || ""
+              }
               error={!!errors.category}
               onChange={(event) => {
-                setValue("category", event.target.value);
-              }}
-            >
+                setValue(
+                  "category",
+                  event.target.value
+                );
+              }}>
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value="dresses">Dresses</MenuItem>
-              <MenuItem value="tops">Tops</MenuItem>
-              <MenuItem value="skirts">Skirts</MenuItem>
-              <MenuItem value="pants">Pants</MenuItem>
-              <MenuItem value="jackets">Jackets</MenuItem>
+              <MenuItem value="dresses">
+                Dresses
+              </MenuItem>
+              <MenuItem value="tops">
+                Tops
+              </MenuItem>
+              <MenuItem value="skirts">
+                Skirts
+              </MenuItem>
+              <MenuItem value="pants">
+                Pants
+              </MenuItem>
+              <MenuItem value="jackets">
+                Jackets
+              </MenuItem>
             </Select>
             {errors.category && (
-              <Typography color="error">{errors.category.message}</Typography>
+              <Typography color="error">
+                {errors.category.message}
+              </Typography>
             )}
           </FormControl>
         </Grid>
@@ -256,28 +353,40 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
               required: "Weight is required",
               valueAsNumber: true,
             })}
-            label="Weight (kg)"
+            label="Weight (g)"
             type="number"
             variant="outlined"
             fullWidth
             margin="normal"
             error={!!errors.weight}
-            helperText={errors.weight ? errors.weight.message : ""}
+            helperText={
+              errors.weight
+                ? errors.weight.message
+                : ""
+            }
           />
         </Grid>
 
         <Grid item xs={12} md={6}>
           <FormControl margin="normal" fullWidth>
-            <InputLabel id="size-label">Size</InputLabel>
+            <InputLabel id="size-label">
+              Size
+            </InputLabel>
             <Select
-              {...register("size", { required: "Size is required" })}
+              {...register("size", {
+                required: "Size is required",
+              })}
               labelId="size-label"
-              defaultValue={initialValues.size || ""}
+              defaultValue={
+                initialValues.size || ""
+              }
               error={!!errors.size}
               onChange={(event) => {
-                setValue("size", event.target.value);
-              }}
-            >
+                setValue(
+                  "size",
+                  event.target.value
+                );
+              }}>
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
@@ -288,35 +397,49 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
               ))}
             </Select>
             {errors.size && (
-              <Typography color="error">{errors.size.message}</Typography>
+              <Typography color="error">
+                {errors.size.message}
+              </Typography>
             )}
           </FormControl>
         </Grid>
 
         {initialValues._id && (
           <Grid item xs={12} md={6}>
-            <FormControl margin="normal" fullWidth>
-              <InputLabel id="stock-label">Stock</InputLabel>
+            <FormControl
+              margin="normal"
+              fullWidth>
+              <InputLabel id="stock-label">
+                Stock
+              </InputLabel>
               <Select
                 {...register("stockStatus")}
                 labelId="stock-label"
-                defaultValue={initialValues.stockStatus || ""}
+                defaultValue={
+                  initialValues.stockStatus || ""
+                }
                 error={!!errors.stockStatus}
                 onChange={(event) => {
-                  setValue("stock", event.target.value);
-                }}
-              >
+                  setValue(
+                    "stock",
+                    event.target.value
+                  );
+                }}>
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
                 {stock.map((stock) => (
-                  <MenuItem key={stock} value={stock}>
+                  <MenuItem
+                    key={stock}
+                    value={stock}>
                     {stock}
                   </MenuItem>
                 ))}
               </Select>
               {errors.stock && (
-                <Typography color="error">{errors.stock.message}</Typography>
+                <Typography color="error">
+                  {errors.stock.message}
+                </Typography>
               )}
             </FormControl>
           </Grid>
@@ -324,7 +447,9 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
 
         <Grid item xs={12} md={6}>
           <FormGroup>
-            <Typography variant="h6">Materials</Typography>
+            <Typography variant="h6">
+              Materials
+            </Typography>
             {materials.map((material) => (
               <FormControlLabel
                 key={material}
@@ -332,8 +457,12 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
                   <Checkbox
                     {...register("materials")}
                     value={material}
-                    checked={watch("materials")?.includes(material) || false}
-                    onChange={handleMaterialChange}
+                    checked={(
+                      watch("materials") || []
+                    ).includes(material)}
+                    onChange={
+                      handleMaterialChange
+                    }
                   />
                 }
                 label={material}
@@ -344,7 +473,7 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
       </Grid>
 
       <TextField
-        {...register("description", { required: "Description is required" })}
+        {...register("description")}
         label="Additional Information"
         variant="outlined"
         fullWidth
@@ -352,7 +481,11 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
         multiline
         rows={4}
         error={!!errors.description}
-        helperText={errors.description ? errors.description.message : ""}
+        helperText={
+          errors.description
+            ? errors.description.message
+            : ""
+        }
       />
 
       <Grid item xs={12} md={6}>
@@ -363,9 +496,16 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
               color="primary"
               checked={isSale}
               onChange={(event) => {
-                const checked = event.target.checked;
-                if (checked && initialValues.discountprice) {
-                  setValue("discountPrice", initialValues.discountprice);
+                const checked =
+                  event.target.checked;
+                if (
+                  checked &&
+                  initialValues.discountprice
+                ) {
+                  setValue(
+                    "discountPrice",
+                    initialValues.discountprice
+                  );
                 } else {
                   setValue("discountPrice", "");
                 }
@@ -389,7 +529,9 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
             onChange={handleDiscountPriceChange}
             error={!!errors.discountPrice}
             helperText={
-              errors.discountPrice ? errors.discountPrice.message : ""
+              errors.discountPrice
+                ? errors.discountPrice.message
+                : ""
             }
             inputProps={{
               min: 0,
@@ -406,8 +548,7 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
         tabIndex={-1}
         startIcon={<CloudUploadIcon />}
         sx={{ marginTop: 2, width: "100%" }}
-        disabled={!!image}
-      >
+        disabled={!!image}>
         Upload Image
         <VisuallyHiddenInput
           type="file"
@@ -425,20 +566,20 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
             height: "auto",
             display: "block",
             mx: "auto",
-          }}
-        >
+          }}>
           <IconButton
             onClick={handleRemoveImage}
             sx={{
               position: "absolute",
               top: 8,
               right: 8,
-              background: "rgba(255, 255, 255, 0.8)",
+              background:
+                "rgba(255, 255, 255, 0.8)",
               "&:hover": {
-                background: "rgba(255, 255, 255, 1)",
+                background:
+                  "rgba(255, 255, 255, 1)",
               },
-            }}
-          >
+            }}>
             <CloseIcon />
           </IconButton>
           <Box
@@ -454,14 +595,36 @@ const ProductForm = ({ initialValues = {}, onSubmitSuccess }) => {
         </Box>
       )}
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: 2,
+        }}>
         {initialValues._id && (
-          <Button onClick={()=>handleDelete()} variant="contained" color="error">
+          <Button
+            onClick={() => handleDelete()}
+            variant="contained"
+            color="error">
             Delete
           </Button>
         )}
-        <Button type="submit" variant="contained" color="primary" style={{marginLeft: "10px"}}>
-          {initialValues._id ? "Update Product" : "Add Product"}
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          style={{ marginLeft: "10px" }}>
+          {loading ? (
+            <CircularProgress
+              size={24}
+              color="inherit"
+            />
+          ) : initialValues._id ? (
+            "Update Product"
+          ) : (
+            "Add Product"
+          )}
         </Button>
       </Box>
     </Box>

@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
 import {
   Card,
   CardActionArea,
@@ -21,11 +24,19 @@ import { useNavigate } from "react-router-dom";
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/edit-product/${product._id}`, { state: product });
+    navigate(`/edit-product/${product._id}`, {
+      state: product,
+    });
   };
 
   return (
-    <Card sx={{ maxWidth: 500, position: "relative", m: 0 }} onClick={handleClick}>
+    <Card
+      sx={{
+        maxWidth: 500,
+        position: "relative",
+        m: 0,
+      }}
+      onClick={handleClick}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -60,12 +71,25 @@ const ProductCard = ({ product }) => {
           />
         )}
         <CardContent sx={{ textAlign: "center" }}>
-          <Typography gutterBottom variant="h6" component="div">
+          <Typography
+            gutterBottom
+            variant="h6"
+            component="div">
             {product.title}
           </Typography>
-          <Rating value={product.review || 0} readOnly />
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Typography variant="h6" sx={{ marginRight: 1 }}>
+          <Rating
+            value={product.review || 0}
+            readOnly
+          />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+            <Typography
+              variant="h6"
+              sx={{ marginRight: 1 }}>
               {product.newprice
                 ? `${product.newprice} €`
                 : `${product.price} €`}
@@ -73,8 +97,10 @@ const ProductCard = ({ product }) => {
             {product.newprice && (
               <Typography
                 variant="h6"
-                sx={{ color: "gray", textDecoration: "line-through" }}
-              >
+                sx={{
+                  color: "gray",
+                  textDecoration: "line-through",
+                }}>
                 {product.price} €
               </Typography>
             )}
@@ -84,7 +110,6 @@ const ProductCard = ({ product }) => {
     </Card>
   );
 };
-
 
 export default function ProductCardWrapper() {
   const [category, setCategory] = useState("All");
@@ -101,21 +126,32 @@ export default function ProductCardWrapper() {
     setStock(event.target.value);
   };
 
-  const filteredProducts = products.filter((product) => {
-    const categoryMatch = category === "All" || product.category === category;
-    const stockMatch = stock === "All" || product.stockStatus === stock;
-    return categoryMatch && stockMatch;
-  });
+  const filteredProducts = products.filter(
+    (product) => {
+      const categoryMatch =
+        category === "All" ||
+        product.category === category;
+      const stockMatch =
+        stock === "All" ||
+        product.stockStatus === stock;
+      return categoryMatch && stockMatch;
+    }
+  );
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
       setLoading(true);
       try {
-        const response = await fetchData("get-product"); 
+        const response = await fetchData(
+          "get-product"
+        );
         setProducts(response.data);
       } catch (error) {
         setError(error.message);
-        console.error("Error fetching data:", error);
+        console.error(
+          "Error fetching data:",
+          error
+        );
       } finally {
         setLoading(false);
       }
@@ -127,47 +163,80 @@ export default function ProductCardWrapper() {
   return (
     <div>
       {loading && <Loader open={loading} />}
-      {error && <Typography color="error">{error}</Typography>}
+      {error && (
+        <Typography color="error">
+          {error}
+        </Typography>
+      )}
       {!loading && !error && (
         <>
-          <FormControl sx={{ m: 2, minWidth: 180 }}>
+          <FormControl
+            sx={{ m: 2, minWidth: 180 }}>
             <InputLabel>Category</InputLabel>
             <Select
               value={category}
               onChange={handleCategoryChange}
-              label="Category"
-            >
+              label="Category">
               <MenuItem value="All">All</MenuItem>
-              <MenuItem value="dresses">Dresses</MenuItem>
-              <MenuItem value="tops">Tops</MenuItem>
-              <MenuItem value="skirts">Skirts</MenuItem>
-              <MenuItem value="pants">Pants</MenuItem>
-              <MenuItem value="jackets">Jackets</MenuItem>
+              <MenuItem value="dresses">
+                Dresses
+              </MenuItem>
+              <MenuItem value="tops">
+                Tops
+              </MenuItem>
+              <MenuItem value="skirts">
+                Skirts
+              </MenuItem>
+              <MenuItem value="pants">
+                Pants
+              </MenuItem>
+              <MenuItem value="jackets">
+                Jackets
+              </MenuItem>
             </Select>
           </FormControl>
 
-          <FormControl sx={{ m: 2, minWidth: 180 }}>
+          <FormControl
+            sx={{ m: 2, minWidth: 180 }}>
             <InputLabel>Stock</InputLabel>
             <Select
               value={stock}
               onChange={handleStockChange}
-              label="Stock"
-            >
+              label="Stock">
               <MenuItem value="All">All</MenuItem>
-              <MenuItem value="In Stock">In Stock</MenuItem>
-              <MenuItem value="Out of Stock">Out of Stock</MenuItem>
+              <MenuItem value="In Stock">
+                In Stock
+              </MenuItem>
+              <MenuItem value="Out of Stock">
+                Out of Stock
+              </MenuItem>
             </Select>
           </FormControl>
 
-          <Grid container spacing={4} justifyContent="center">
+          <Grid
+            container
+            spacing={4}
+            justifyContent="center">
             {filteredProducts.length > 0 ? (
-              filteredProducts.map((product, index) => (
-                <Grid item xs={12} sm={6} md={3} lg={3} key={index}>
-                  <ProductCard product={product} />
-                </Grid>
-              ))
+              filteredProducts.map(
+                (product, index) => (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={3}
+                    lg={3}
+                    key={index}>
+                    <ProductCard
+                      product={product}
+                    />
+                  </Grid>
+                )
+              )
             ) : (
-              <Typography variant="h6">No products found.</Typography>
+              <Typography variant="h6">
+                No products found.
+              </Typography>
             )}
           </Grid>
         </>

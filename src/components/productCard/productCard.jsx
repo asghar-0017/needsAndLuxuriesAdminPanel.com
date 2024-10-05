@@ -43,6 +43,7 @@ const ProductCard = ({ product }) => {
           height="300"
           image={product.Imageurl}
           alt={product.title}
+          loading="lazy"
         />
         {product.discountprice && (
           <Badge

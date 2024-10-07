@@ -154,13 +154,7 @@ const OrderDetailsPage = () => {
         return statusMatch && orderIdMatch;
       }
     );
-
-    // If no matches are found, handle "No data" or show filtered results
-    // if (filteredProducts.length === 0) {
-    //   setFilteredData([{ message: "No data" }]);
-    // } else {
     setFilteredData(filteredProducts);
-    // }
   }, [searchQuery, status]);
 
   const handleOrderStatusChange = async (

@@ -1,4 +1,5 @@
 import React, {
+  useContext,
   useEffect,
   useState,
 } from "react";
@@ -20,6 +21,7 @@ import {
 import { fetchData } from "../../config/apiServices/apiServices";
 import Loader from "../loader/loader";
 import { useNavigate } from "react-router-dom";
+import { SearchContext } from "../../context/context";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -118,6 +120,11 @@ export default function ProductCardWrapper() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filteredData, setFilteredData] =
+  useState([]);
+  const { searchQuery } = useContext(
+    SearchContext
+  );
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
@@ -127,17 +134,45 @@ export default function ProductCardWrapper() {
     setStock(event.target.value);
   };
 
-  const filteredProducts = products.filter(
-    (product) => {
-      const categoryMatch =
+  useEffect(() => {
+    if (products.length === 0) {
+      setFilteredData([]);
+      return;
+    }
+
+    const filteredProducts = products.filter(
+      (product) => {
+        const categoryMatch =
         category === "All" ||
         product.category === category;
       const stockMatch =
         stock === "All" ||
         product.stockStatus === stock;
-      return categoryMatch && stockMatch;
-    }
-  );
+
+        const orderIdMatch =
+          searchQuery === ""
+            ? true
+            : product.title.toLowerCase()
+                .toString()
+                .includes(searchQuery.toLowerCase());
+
+        return categoryMatch && stockMatch && orderIdMatch;
+      }
+    );
+    setFilteredData(filteredProducts);
+  }, [searchQuery]);
+
+  // const filteredProducts = products.filter(
+  //   (product) => {
+  //     const categoryMatch =
+  //       category === "All" ||
+  //       product.category === category;
+  //     const stockMatch =
+  //       stock === "All" ||
+  //       product.stockStatus === stock;
+  //     return categoryMatch && stockMatch;
+  //   }
+  // );
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
@@ -147,6 +182,7 @@ export default function ProductCardWrapper() {
           "get-product"
         );
         setProducts(response.data);
+        setFilteredData(response.data)
       } catch (error) {
         setError(error.message);
         console.error(
@@ -218,8 +254,8 @@ export default function ProductCardWrapper() {
             container
             spacing={4}
             justifyContent="center">
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map(
+            {filteredData.length > 0 ? (
+              filteredData.map(
                 (product, index) => (
                   <Grid
                     item

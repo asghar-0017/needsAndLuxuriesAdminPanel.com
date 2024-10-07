@@ -16,13 +16,13 @@ import Back from "../button/back";
 const getStatusColor = (status) => {
   switch (status) {
     case "Pending":
-      return { color: "#FFC107", text: "Pending" }; // Yellow
+      return { color: "#FFC107", text: "Pending" }; 
     case "Dispatched":
-      return { color: "#4CAF50", text: "Dispatched" }; // Green
+      return { color: "#4CAF50", text: "Dispatched" };
     case "Cancelled":
-      return { color: "#F44336", text: "Cancelled" }; // Red
+      return { color: "#F44336", text: "Cancelled" };
     default:
-      return { color: "#000", text: status }; // Default
+      return { color: "#000", text: status };
   }
 };
 
@@ -50,7 +50,6 @@ const OrderDetailPage = () => {
     fetchOrderDetails();
   }, [orderId]);
 
-  // Calculate the total price based on products and quantity
   const calculateTotalPrice = () => {
     if (!orderDetails) return 0;
     return orderDetails.products.reduce(
@@ -166,7 +165,6 @@ const OrderDetailPage = () => {
               </Box>
             ))}
 
-            {/* Total Price at the bottom right */}
             <Box
               display="flex"
               justifyContent="flex-end"

@@ -62,6 +62,8 @@ const ProductForm = ({
   });
 
   const [loading, setLoading] = useState(false);
+  const [customCollection, setCustomCollection] = useState();
+
 
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] =
@@ -83,6 +85,8 @@ const ProductForm = ({
       return;
     }
     const formData = new FormData();
+    formData.append("collection", data.collection === "Other" ? customCollection : data.collection);
+
     if (image) {
       formData.append("image", image);
     }
@@ -93,6 +97,8 @@ const ProductForm = ({
       "description",
       data.description
     );
+   formData.append("otherInfo", data.otherInfo);
+
     formData.append("Quantity", data.Quantity);
     formData.append("weight", data.weight);
     formData.append(
@@ -119,9 +125,6 @@ const ProductForm = ({
     formData.append("category", data.category);
     setLoading(true);
 
-    // formData.forEach((value, key) => {
-    //   console.log(`${key}:`, value);
-    // });
     try {
       await onSubmitSuccess(formData);
       reset();
@@ -267,7 +270,9 @@ const ProductForm = ({
                 : ""
             }
           />
+          
         </Grid>
+       
         <Grid item xs={12} md={6}>
           <TextField
             {...register("review", {
@@ -309,50 +314,53 @@ const ProductForm = ({
 
         <Grid item xs={12} md={6}>
           <FormControl margin="normal" fullWidth>
-            <InputLabel id="category-label">
-              Category
-            </InputLabel>
+            <InputLabel id="collection-label">Collection</InputLabel>
             <Select
-              {...register("category", {
-                required: "Category is required",
+              {...register("collection", {
+                required: "Collection is required",
               })}
-              labelId="category-label"
-              defaultValue={
-                initialValues.category || ""
-              }
-              error={!!errors.category}
+              labelId="collection-label"
+              error={!!errors.collection}
               onChange={(event) => {
-                setValue(
-                  "category",
-                  event.target.value
-                );
-              }}>
+                const value = event.target.value;
+                setValue("collection", value);
+                if (value === "Other") {
+                  setCustomCollection(""); // Reset custom collection when "Other" is selected
+                } else {
+                  setCustomCollection(""); // Clear custom input if not "Other"
+                }
+              }}
+            >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value="dresses">
-                Dresses
-              </MenuItem>
-              <MenuItem value="tops">
-                Tops
-              </MenuItem>
-              <MenuItem value="skirts">
-                Skirts
-              </MenuItem>
-              <MenuItem value="pants">
-                Pants
-              </MenuItem>
-              <MenuItem value="jackets">
-                Jackets
-              </MenuItem>
+              <MenuItem value="Summer">Summer</MenuItem>
+              <MenuItem value="Winter">Winter</MenuItem>
+              <MenuItem value="Autumn">Autumn</MenuItem>
+              <MenuItem value="Spring">Spring</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
             </Select>
-            {errors.category && (
-              <Typography color="error">
-                {errors.category.message}
-              </Typography>
+            {errors.collection && (
+              <Typography color="error">{errors.collection.message}</Typography>
             )}
           </FormControl>
         </Grid>
+
+        {/* Custom collection input */}
+        {watch("collection") === "Other" && (
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Custom Collection"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={customCollection}
+              onChange={(event) => setCustomCollection(event.target.value)}
+              required
+            />
+          </Grid>
+        )}
+
 
         <Grid item xs={12} md={6}>
           <TextField
@@ -481,16 +489,32 @@ const ProductForm = ({
 
       <TextField
         {...register("description")}
-        label="Additional Information"
+        label="Description"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        multiline
+        rows={2}
+        error={!!errors.description}
+        helperText={
+          errors.description
+            ? errors.description.message
+            : ""
+        }
+      />
+
+<TextField
+        {...register("otherInfo")}
+        label="Other Information"
         variant="outlined"
         fullWidth
         margin="normal"
         multiline
         rows={4}
-        error={!!errors.description}
+        error={!!errors.otherInfo}
         helperText={
-          errors.description
-            ? errors.description.message
+          errors.otherInfo
+            ? errors.otherInfo.message
             : ""
         }
       />

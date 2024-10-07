@@ -1,4 +1,3 @@
-/* From Uiverse.io by gharsh11032000 */
 .form-container {
   width: 100%;
   max-width: 600px;
@@ -111,3 +110,13 @@
 .error-message {
   color: red;
 }
+
+/* @import "@fullcalendar/core/main.css";
+@import "@fullcalendar/daygrid/main.css";
+@import "@fullcalendar/timegrid/main.css";
+
+.fc-daygrid-event {
+  background-color: #007bff;
+  color: white;
+  border: none;
+} */

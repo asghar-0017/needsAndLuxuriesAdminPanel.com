@@ -136,31 +136,30 @@ export default function ProductCardWrapper() {
 
   useEffect(() => {
     if (products.length === 0) {
-      setFilteredData([]);
+      setFilteredData([]); 
       return;
     }
-
-    const filteredProducts = products.filter(
-      (product) => {
-        const categoryMatch =
-        category === "All" ||
-        product.category === category;
-      const stockMatch =
-        stock === "All" ||
-        product.stockStatus === stock;
-
-        const orderIdMatch =
-          searchQuery === ""
-            ? true
-            : product.title.toLowerCase()
-                .toString()
-                .includes(searchQuery.toLowerCase());
-
-        return categoryMatch && stockMatch && orderIdMatch;
+  
+    const filteredProducts = products.filter((product) => {
+      const categoryMatch = category === "All" || product.category === category;
+  
+      const stockMatch = stock === "All" || product.stockStatus === stock;
+  
+      let orderIdMatch = true; 
+      if (searchQuery) {
+        orderIdMatch = product.title?.toLowerCase().includes(searchQuery.toLowerCase());
       }
-    );
+  
+      return categoryMatch && stockMatch && orderIdMatch;
+    });
+  
     setFilteredData(filteredProducts);
-  }, [searchQuery]);
+    console.log(filteredProducts);
+  
+  }, [category, stock, searchQuery, products]);
+  
+  
+  
 
   // const filteredProducts = products.filter(
   //   (product) => {

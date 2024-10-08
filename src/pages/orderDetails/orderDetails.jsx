@@ -69,6 +69,9 @@ const OrderDetailsPage = () => {
         if (!response || !response.result) {
           throw new Error("No data found");
         }
+
+        // console.log(response);
+        
         const initialDisabledButtons =
           response.result.reduce((acc, order) => {
             acc[order._id] = {
@@ -183,7 +186,6 @@ const OrderDetailsPage = () => {
             newStatus: newStatus,
           };
 
-          // Disable the button immediately after clicking
           setDisabledButtons((prev) => ({
             ...prev,
             [orderId]: {
@@ -272,7 +274,6 @@ const OrderDetailsPage = () => {
             </Typography>
           </Box>
 
-          {/* Order Summary Cards */}
           <Grid
             container
             spacing={3}
@@ -395,7 +396,8 @@ const OrderDetailsPage = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>Order ID</TableCell>
-                  <TableCell>Customer</TableCell>
+                  <TableCell>Customer Name</TableCell>
+                  <TableCell>Order Date</TableCell>
                   <TableCell>Address</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>Action</TableCell>
@@ -442,6 +444,9 @@ const OrderDetailsPage = () => {
                     </TableCell>
 
                     <TableCell>{`${order.firstName} ${order.lastName}`}</TableCell>
+                    <TableCell>
+                      {new Date (order.orderDate).toLocaleDateString()}
+                    </TableCell>
                     <TableCell>{`${order.address}, ${order.apartment}, ${order.postCode}`}</TableCell>
                     <TableCell>
                       {order.orderStatus}

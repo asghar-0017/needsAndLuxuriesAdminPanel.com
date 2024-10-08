@@ -361,6 +361,52 @@ const ProductForm = ({
           </Grid>
         )}
 
+<Grid item xs={12} md={6}>
+          <FormControl margin="normal" fullWidth>
+            <InputLabel id="category-label">
+              Category
+            </InputLabel>
+            <Select
+              {...register("category", {
+                required: "Category is required",
+              })}
+              labelId="category-label"
+              defaultValue={
+                initialValues.category || ""
+              }
+              error={!!errors.category}
+              onChange={(event) => {
+                setValue(
+                  "category",
+                  event.target.value
+                );
+              }}>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="dresses">
+                Dresses
+              </MenuItem>
+              <MenuItem value="tops">
+                Tops
+              </MenuItem>
+              <MenuItem value="skirts">
+                Skirts
+              </MenuItem>
+              <MenuItem value="pants">
+                Pants
+              </MenuItem>
+              <MenuItem value="jackets">
+                Jackets
+              </MenuItem>
+            </Select>
+            {errors.category && (
+              <Typography color="error">
+                {errors.category.message}
+              </Typography>
+            )}
+          </FormControl>
+        </Grid>
 
         <Grid item xs={12} md={6}>
           <TextField

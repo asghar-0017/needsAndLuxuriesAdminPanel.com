@@ -14,7 +14,7 @@ import {
 } from "recharts";
 import { fetchData } from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 import { CheckCircle, Cancel, AccessTime } from "@mui/icons-material";
 import FullCalendarComponent from "../../components/calendar/calendar";
 
@@ -194,12 +194,20 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
               </Grid>
+            <Grid item xs={12}>
+            <Divider />
+            </Grid>
             </Grid>
 
+
             <Grid container spacing={5}>
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={7}>
                 <FullCalendarComponent orders={orders} />
               </Grid>
+
+                <Grid item xs={1}>
+    <Divider orientation="vertical" />
+  </Grid>
 
               <Grid item xs={12} md={4}>
                 <ResponsiveContainer width="100%" height={300}>
@@ -227,6 +235,8 @@ const Dashboard = () => {
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
+
+                <Divider orientation="horizontal" />
 
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>

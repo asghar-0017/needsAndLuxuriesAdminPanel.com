@@ -102,6 +102,9 @@ const Dashboard = () => {
     );
   };
 
+  console.log(orders);
+  
+
   return (
     <>
       <div

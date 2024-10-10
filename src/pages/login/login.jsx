@@ -33,10 +33,10 @@ const Login = () => {
         "token",
         response.token
       );
+      setProgress(100);
       setTimeout(() => {
-        setProgress(100);
         navigate("/");
-      }, 2000);
+      }, 100);
     } catch (error) {
       setError(error.message);
       Swal.fire({

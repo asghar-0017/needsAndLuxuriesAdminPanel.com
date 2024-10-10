@@ -52,7 +52,7 @@ const OrderDetailsPage = () => {
           throw new Error("No data found");
         }
 
-        // console.log(response);
+        console.log(response);
 
         const initialDisabledButtons = response.result.reduce((acc, order) => {
           acc[order._id] = {
@@ -99,7 +99,7 @@ const OrderDetailsPage = () => {
   
   useEffect(() => {
     if (products.length === 0) {
-      setFilteredData([]); // Reset if no products
+      setFilteredData([]); 
       return;
     }
   

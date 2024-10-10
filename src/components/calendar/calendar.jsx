@@ -6,30 +6,29 @@ import interactionPlugin from "@fullcalendar/interaction";
 import "../../assets/styles/mainScreen.css";
 
 const FullCalendarComponent = ({ orders }) => {
-  const events = orders.map((order) => ({
-    title: `Order: ${order.orderStatus}`,
-    start: order.orderDate,
-    end: order.orderDate,
-    color:
-      order.orderStatus === "Pending"
-        ? "yellow"
-        : order.orderStatus === "Dispatched"
-        ? "green"
-        : "red",
+  const orderCountByDate = {};
+
+  orders.forEach((order) => {
+    const orderDate = new Date(order.orderDate).toISOString().split('T')[0]; 
+    orderCountByDate[orderDate] = (orderCountByDate[orderDate] || 0) + 1; 
+  });
+
+  const events = Object.keys(orderCountByDate).map((date) => ({
+    title: `Orders: ${orderCountByDate[date]}`,
+    start: date, 
+    end: date,   
   }));
 
   return (
-    <FullCalendar
-      plugins={[
-        dayGridPlugin,
-        timeGridPlugin,
-        interactionPlugin,
-      ]}
-      initialView="dayGridMonth"
-      events={events}
-      editable={false}
-      selectable={true}
-    />
+    <div>
+      <FullCalendar
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        events={events}
+        editable={false}
+        selectable={true}
+      />
+    </div>
   );
 };
 

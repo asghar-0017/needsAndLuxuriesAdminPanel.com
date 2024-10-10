@@ -72,7 +72,7 @@ const ProductForm = ({
 
   const sizes = ["S", "M", "L", "XL", "XXL"];
   const stock = ["In Stock", "Out of Stock"];
-  const materials = [
+  const materials = [ 
     "Polyester",
     "Cotton",
     "Silk",

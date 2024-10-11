@@ -68,17 +68,17 @@ export default function Sidebar({ open, handleDrawerClose }) {
   const theme = useTheme();
 
   const sidebarItems = [
-    { text: 'Dashboard', icon: <DashboardIcon sx={{ color: '#313131' }}/>, route: '/' },
-    { text: 'Add Products', icon: <AddShoppingCartIcon sx={{ color: '#313131' }}/>, route: '/add-products' },
-    { text: 'All Products', icon: <CategoryIcon sx={{ color: '#313131' }}/>, route: '/all-products' },
-    { text: 'Order Details', icon: <DetailsIcon sx={{ color: '#313131' }}/>, route: '/order-details' },
+    { text: 'Dashboard', icon: <DashboardIcon sx={{ color: '#00203F' }}/>, route: '/' },
+    { text: 'Add Products', icon: <AddShoppingCartIcon sx={{ color: '#00203F' }}/>, route: '/add-products' },
+    { text: 'All Products', icon: <CategoryIcon sx={{ color: '#00203F' }}/>, route: '/all-products' },
+    { text: 'Order Details', icon: <DetailsIcon sx={{ color: '#00203F' }}/>, route: '/order-details' },
   ];
 
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
         <IconButton onClick={handleDrawerClose}>
-          {theme.direction === 'rtl' ? <ChevronRightIcon sx={{color: "#313131"}}/> : <ChevronLeftIcon sx={{color: "#313131"}}/>}
+          {theme.direction === 'rtl' ? <ChevronRightIcon sx={{color: "#00203F"}}/> : <ChevronLeftIcon sx={{color: "#313131"}}/>}
         </IconButton>
       </DrawerHeader>
       <Divider />

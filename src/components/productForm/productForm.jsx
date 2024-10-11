@@ -228,6 +228,7 @@ const ProductForm = ({
         variant="h4"
         fontWeight={"bold"}
         gutterBottom
+        color="#00203F"
         align="center">
         {initialValues._id
           ? "Edit Product"
@@ -325,9 +326,9 @@ const ProductForm = ({
                 const value = event.target.value;
                 setValue("collection", value);
                 if (value === "Other") {
-                  setCustomCollection(""); // Reset custom collection when "Other" is selected
+                  setCustomCollection(""); 
                 } else {
-                  setCustomCollection(""); // Clear custom input if not "Other"
+                  setCustomCollection(""); 
                 }
               }}
             >
@@ -346,7 +347,6 @@ const ProductForm = ({
           </FormControl>
         </Grid>
 
-        {/* Custom collection input */}
         {watch("collection") === "Other" && (
           <Grid item xs={12} md={6}>
             <TextField
@@ -624,11 +624,13 @@ const ProductForm = ({
         variant="contained"
         tabIndex={-1}
         startIcon={<CloudUploadIcon />}
-        sx={{ marginTop: 2, width: "100%" }}
+        sx={{ marginTop: 2, width: "100%", backgroundColor: "#ADF0D1" }}
+        color="#00203F"
         disabled={!!image}>
         Upload Image
         <VisuallyHiddenInput
           type="file"
+          color="#00203F"
           onChange={handleImageChange}
           accept="image/*"
         />
@@ -689,9 +691,9 @@ const ProductForm = ({
         <Button
           type="submit"
           variant="contained"
-          color="primary"
+          color="#00203F"
           disabled={loading}
-          style={{ marginLeft: "10px" }}>
+          style={{ marginLeft: "10px", backgroundColor: "#ADF0D1" }}>
           {loading ? (
             <CircularProgress
               size={24}

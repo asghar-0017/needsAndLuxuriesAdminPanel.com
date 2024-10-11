@@ -344,7 +344,7 @@ const OrderDetailsPage = () => {
                           onClick={() => navigate(`/order/${order.orderId}`)}
                           sx={{
                             cursor: "pointer",
-                            color: "#3f51b5",
+                            color: "#00203F",
                             textDecoration: "underline",
                             marginRight: 1,
                           }}
@@ -356,7 +356,7 @@ const OrderDetailsPage = () => {
                             onClick={() => copyToClipboard(order.orderId)}
                             sx={{
                               cursor: "pointer",
-                              color: "#3f51b5",
+                              color: "#00203F",
                               fontSize: "20px",
                             }}
                           />
@@ -375,9 +375,10 @@ const OrderDetailsPage = () => {
                         <Button
                           style={{
                             marginRight: "10px",
+                            backgroundColor: "#ADF0D1"
                           }}
                           variant="contained"
-                          color="primary"
+                          color="#00203F"
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Dispatched")
                           }
@@ -391,7 +392,7 @@ const OrderDetailsPage = () => {
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Cancelled")
                           }
-                          disabled={disabledButtons[order._id]?.Cancelled} // Disable if cancelled
+                          disabled={disabledButtons[order._id]?.Cancelled} 
                         >
                           Cancel
                         </Button>

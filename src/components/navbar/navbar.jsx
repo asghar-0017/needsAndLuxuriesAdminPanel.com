@@ -68,7 +68,7 @@ export default function Navbar({
     <AppBar
       position="fixed"
       open={open}
-      style={{ backgroundColor: "#F0E0FF" }}>
+      style={{ backgroundColor: "#00203F" }}>
       <Toolbar>
         <IconButton
           color="inherit"
@@ -79,7 +79,7 @@ export default function Navbar({
             marginRight: 5,
             ...(open && { display: "none" }),
           }}>
-          <MenuIcon sx={{ color: "#313131" }} />
+          <MenuIcon sx={{ color: "#ADF0D1" }} />
         </IconButton>
         <Typography
           variant="h6"
@@ -87,7 +87,7 @@ export default function Navbar({
           component="div"
           sx={{
             flexGrow: 1,
-            color: "#313131",
+            color: "#ADF0D1",
             fontWeight: "bold",
             fontSize: "1.5rem",
           }}>
@@ -113,17 +113,17 @@ export default function Navbar({
               },
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
-                  borderColor: "#313131",
+                  borderColor: "#ADF0D1",
                 },
                 "&:hover fieldset": {
-                  borderColor: "#313131",
+                  borderColor: "#ADF0D1",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#313131",
+                  borderColor: "#ADF0D1",
                 },
               },
               "& .MuiInputBase-input": {
-                color: "#313131",
+                color: "#ADF0D1",
               },
             }}
             value={searchQuery}

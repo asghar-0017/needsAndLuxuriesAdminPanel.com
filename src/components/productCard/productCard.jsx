@@ -17,11 +17,13 @@ import {
   InputLabel,
   FormControl,
   CircularProgress,
+  Box,
 } from "@mui/material";
 import { fetchData } from "../../config/apiServices/apiServices";
 import Loader from "../loader/loader";
 import { useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/context";
+import { SentimentDissatisfied } from "@mui/icons-material";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -46,6 +48,7 @@ const ProductCard = ({ product }) => {
           image={product.Imageurl}
           alt={product.title}
           loading="lazy"
+          style={{borderBottom: ".1px solid gray"}}
         />
         {product.discountprice && (
           <Badge
@@ -73,6 +76,20 @@ const ProductCard = ({ product }) => {
             }}
           />
         )}
+         {product.stockStatus == "Out of Stock" && (
+          <Badge
+            badgeContent={`Out of Stock`}
+            color="error"
+            sx={{
+              position: "absolute",
+              top: 80,
+              right: 50,
+              backgroundColor: "red",
+              color: "white",
+              width: "150px"
+            }}
+          />
+        )}
         <CardContent sx={{ textAlign: "center" }}>
           <Typography
             gutterBottom
@@ -92,19 +109,19 @@ const ProductCard = ({ product }) => {
             }}>
             <Typography
               variant="h6"
-              sx={{ marginRight: 1 }}>
+              sx={{ marginRight: 1, fontWeight: "bold" }}>
               {product.newprice
-                ? `${product.newprice} €`
-                : `${product.price} €`}
+                ? `Rs ${product.newprice}`
+                : `Rs ${product.price}`}
             </Typography>
             {product.newprice && (
               <Typography
                 variant="h6"
                 sx={{
-                  color: "gray",
+                  color: "red",
                   textDecoration: "line-through",
                 }}>
-                {product.price} €
+                Rs {product.price}
               </Typography>
             )}
           </div>
@@ -207,7 +224,7 @@ export default function ProductCardWrapper() {
       {!loading && !error && (
         <>
           <FormControl
-            sx={{ m: 2, minWidth: 180 }}>
+            sx={{ mb: 2, mr: 2, minWidth: 180 }}>
             <InputLabel>Category</InputLabel>
             <Select
               value={category}
@@ -233,7 +250,7 @@ export default function ProductCardWrapper() {
           </FormControl>
 
           <FormControl
-            sx={{ m: 2, minWidth: 180 }}>
+            sx={{ mb: 2, minWidth: 180 }}>
             <InputLabel>Stock</InputLabel>
             <Select
               value={stock}
@@ -270,9 +287,15 @@ export default function ProductCardWrapper() {
                 )
               )
             ) : (
-              <Typography variant="h6">
-                No products found.
+              <Box sx={{ textAlign: "center", mt: 4 }}>
+              <SentimentDissatisfied sx={{ fontSize: 50, color: "gray" }} />
+              <Typography variant="h5" sx={{ mt: 2 }}>
+                Oops! No Products Found
               </Typography>
+              <Typography variant="body1" sx={{ color: "text.secondary" }}>
+                It seems we couldn't find any products that match your criteria. Please try adjusting your filters or search term.
+              </Typography>
+            </Box>
             )}
           </Grid>
         </>

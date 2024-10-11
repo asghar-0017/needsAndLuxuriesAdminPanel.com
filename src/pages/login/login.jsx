@@ -58,7 +58,7 @@ const Login = () => {
         onLoaderFinished={() => setProgress(0)}
       />
       <div className="form-container">
-        <div className="logo-container">
+        <div className="logo-container inputColor" style={{fontSize: "20px"}}>
           Admin Login
         </div>
 
@@ -66,10 +66,10 @@ const Login = () => {
           className="form"
           onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
-            <label htmlFor="email">
+            <label htmlFor="email" className="inputColor">
               Username
             </label>
-            <input
+            <input className="inputColor"
               type="text"
               id="userName"
               {...register("userName", {
@@ -83,10 +83,10 @@ const Login = () => {
               </p>
             )}
 
-            <label htmlFor="password">
+            <label htmlFor="password" className="inputColor">
               Password
             </label>
-            <input
+            <input className="inputColor"
               type="password"
               id="password"
               {...register("password", {

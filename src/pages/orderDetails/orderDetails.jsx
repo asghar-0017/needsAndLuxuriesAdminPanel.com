@@ -26,7 +26,6 @@ import { fetchData, updateData } from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
 import { showSuccessToast } from "../../components/toast/toast";
 import Swal from "sweetalert2";
-import CancelIcon from "@mui/icons-material/Cancel";
 import { ContentCopy } from "@mui/icons-material";
 import { SearchContext } from "../../context/context";
 import DatePickerComp from "../../components/datePicker/datePicker";
@@ -95,36 +94,35 @@ const OrderDetailsPage = () => {
     setStatus(event.target.value);
   };
 
-  
-  
   useEffect(() => {
     if (products.length === 0) {
-      setFilteredData([]); 
+      setFilteredData([]);
       return;
     }
-  
+
     const filteredProducts = products.filter((product) => {
       const statusMatch = status === "All" || product.orderStatus === status;
-  
-      const orderIdMatch = searchQuery === "" || product.orderId.toString().includes(searchQuery);
-  
-      let dateMatch = true; 
+
+      const orderIdMatch =
+        searchQuery === "" || product.orderId.toString().includes(searchQuery);
+
+      let dateMatch = true;
       if (selectedDate) {
-        const selectedDateString = new Date(selectedDate.$d).toLocaleDateString();
-        const productDateString = new Date(product.orderDate).toLocaleDateString();
+        const selectedDateString = new Date(
+          selectedDate.$d
+        ).toLocaleDateString();
+        const productDateString = new Date(
+          product.orderDate
+        ).toLocaleDateString();
         dateMatch = selectedDateString === productDateString;
       }
-  
+
       return statusMatch && orderIdMatch && dateMatch;
     });
-  
-    setFilteredData(filteredProducts); 
-    console.log(filteredProducts); 
-  
-  }, [status, searchQuery, selectedDate, products]); 
-  
 
-  
+    setFilteredData(filteredProducts);
+    console.log(filteredProducts);
+  }, [status, searchQuery, selectedDate, products]);
 
   const handleOrderStatusChange = async (orderId, newStatus) => {
     const result = await Swal.fire({
@@ -375,14 +373,17 @@ const OrderDetailsPage = () => {
                         <Button
                           style={{
                             marginRight: "10px",
-                            backgroundColor: "#ADF0D1"
+                            backgroundColor: "#ADF0D1",
                           }}
                           variant="contained"
                           color="#00203F"
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Dispatched")
                           }
-                          disabled={disabledButtons[order._id]?.Dispatched}
+                          disabled={
+                            disabledButtons[order._id]?.Dispatched ||
+                            disabledButtons[order._id]?.Cancelled
+                          }
                         >
                           Dispatch
                         </Button>
@@ -392,7 +393,7 @@ const OrderDetailsPage = () => {
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Cancelled")
                           }
-                          disabled={disabledButtons[order._id]?.Cancelled} 
+                          disabled={disabledButtons[order._id]?.Cancelled}
                         >
                           Cancel
                         </Button>

@@ -30,7 +30,7 @@ const Dashboard = () => {
 
   const [orders, setOrders] = useState([]);
 
-  const COLORS = ["#FFBB28", "#00C49F", "#0088FE"];
+  const COLORS = ["#FFBB28", "#00C49F", "red"];
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
@@ -103,7 +103,6 @@ const Dashboard = () => {
   };
 
   console.log(orders);
-  
 
   return (
     <>
@@ -197,20 +196,19 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
               </Grid>
-            <Grid item xs={12}>
-            <Divider />
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
             </Grid>
-            </Grid>
-
 
             <Grid container spacing={5}>
               <Grid item xs={12} md={7}>
                 <FullCalendarComponent orders={orders} />
               </Grid>
 
-                <Grid item xs={1}>
-    <Divider orientation="vertical" />
-  </Grid>
+              <Grid item xs={1}>
+                <Divider orientation="vertical" />
+              </Grid>
 
               <Grid item xs={12} md={4}>
                 <ResponsiveContainer width="100%" height={300}>

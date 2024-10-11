@@ -188,7 +188,7 @@ export default function OTPInput() {
         onLoaderFinished={() => setProgress(0)}
       />
       <div className="form-container">
-        <div className="logo-container">
+        <div className="logo-container inputColor">
           Verify OTP
         </div>
 
@@ -203,6 +203,7 @@ export default function OTPInput() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              color: "#00203F"
             }}>
             <OTP
               separator={<span>-</span>}

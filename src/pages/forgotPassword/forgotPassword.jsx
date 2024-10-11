@@ -24,7 +24,6 @@ const ForgotPassword = () => {
   const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
 
-  // Watch the password and confirm password
   const password = watch("password");
   const confirmPassword = watch(
     "confirmPassword"
@@ -32,7 +31,6 @@ const ForgotPassword = () => {
 
   const location = useLocation();
 
-  // Check if the state is passed, if not redirect
   if (
     !location.state ||
     !location.state.fromSentEmail
@@ -78,7 +76,7 @@ const ForgotPassword = () => {
         onLoaderFinished={() => setProgress(0)}
       />
       <div className="form-container">
-        <div className="logo-container">
+        <div className="logo-container inputColor" style={{fontSize: "20px"}}>
           Change Password
         </div>
 
@@ -86,12 +84,13 @@ const ForgotPassword = () => {
           className="form"
           onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
-            <label htmlFor="password">
+            <label htmlFor="password" className="inputColor">
               Password
             </label>
             <input
               type="password"
               id="password"
+              className="inputColor"
               {...register("password", {
                 required: "Password is required",
                 minLength: {

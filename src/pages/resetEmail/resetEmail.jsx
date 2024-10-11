@@ -51,7 +51,7 @@ const ResetEmail = () => {
         onLoaderFinished={() => setProgress(0)}
       />
       <div className="form-container">
-        <div className="logo-container">
+        <div className="logo-container inputColor" style={{fontSize: "20px"}}>
           Reset Email
         </div>
 
@@ -59,10 +59,11 @@ const ResetEmail = () => {
           className="form"
           onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email"className="inputColor">Email</label>
             <input
               type="email"
               id="email"
+              className="inputColor"
               {...register("email", {
                 required: "Email is required",
               })}

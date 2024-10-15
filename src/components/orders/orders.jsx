@@ -193,8 +193,9 @@ const OrderDetailPage = () => {
                   <CardMedia
                     component="img"
                     height="auto"
-                    image={orderDetails?.image}
+                    image={orderDetails?.cashOnDeliveryImage}
                     alt="Order Image"
+                    loading="lazy"
                     sx={{ objectFit: "cover", borderRadius: 1 }}
                   />
                 </Grid>
@@ -234,8 +235,130 @@ const OrderDetailPage = () => {
                </Typography>
              </Box>
            </Box>
-           
             ))}
+
+{orderDetails?.stretchData && (
+  <>
+    <Divider sx={{ my: 2 }} />
+    <Typography variant="h5" fontWeight={"bold"}>Stretch Data:</Typography>
+
+    {/* Kameez Measurements */}
+    <Divider sx={{ my: 2 }} />
+    <Typography variant="h5">Kameez Measurements</Typography>
+    <Grid container spacing={2}>
+      {[
+        { label: "Armhole Circumference", value: orderDetails.stretchData.kameez?.armholeCircumference, unit: 'inches' },
+        { label: "Bicep Circumference", value: orderDetails.stretchData.kameez?.bicepCircumference, unit: 'inches' },
+        { label: "Bust Circumference", value: orderDetails.stretchData.kameez?.bustCircumference, unit: 'inches' },
+        { label: "Front Neck Depth", value: orderDetails.stretchData.kameez?.frontNeckDepth, unit: 'inches' },
+        { label: "Hip Circumference", value: orderDetails.stretchData.kameez?.hipCircumference, unit: 'inches' },
+        { label: "Kameez Length", value: orderDetails.stretchData.kameez?.kameezLength, unit: 'inches' },
+        { label: "Neck Circumference", value: orderDetails.stretchData.kameez?.neckCircumference, unit: 'inches' },
+        { label: "Shoulder to Waist Length", value: orderDetails.stretchData.kameez?.shoulderToWaistLength, unit: 'inches' },
+        { label: "Shoulder Width", value: orderDetails.stretchData.kameez?.shoulderWidth, unit: 'inches' },
+        { label: "Sleeve Length", value: orderDetails.stretchData.kameez?.sleeveLength, unit: 'inches' },
+        { label: "Sleeve Opening Circumference", value: orderDetails.stretchData.kameez?.sleeveOpeningCircumference, unit: 'inches' },
+        { label: "Waist Circumference", value: orderDetails.stretchData.kameez?.waistCircumference, unit: 'inches' }
+      ].map((field, index) =>
+        field.value ? (
+          <Grid item xs={12} sm={6} key={index}>
+            <Typography variant="h6">{field.label}</Typography>
+            <Typography variant="body2">
+              {field.value} {field.unit || ''}
+            </Typography>
+          </Grid>
+        ) : null
+      )}
+    </Grid>
+
+    {/* Shalwar Measurements */}
+    <Divider sx={{ my: 2 }} />
+    <Typography variant="h5">Shalwar Measurements</Typography>
+    <Grid container spacing={2}>
+      {[
+        { label: "Ankle Opening", value: orderDetails.stretchData.shalwar?.ankleOpening, unit: 'inches' },
+        { label: "Crotch Depth", value: orderDetails.stretchData.shalwar?.crotchDepth, unit: 'inches' },
+        { label: "Hip Circumference", value: orderDetails.stretchData.shalwar?.hipCircumference, unit: 'inches' },
+        { label: "Inseam Length", value: orderDetails.stretchData.shalwar?.inseamLength, unit: 'inches' },
+        { label: "Outseam Length", value: orderDetails.stretchData.shalwar?.outseamLength, unit: 'inches' },
+        { label: "Rise", value: orderDetails.stretchData.shalwar?.rise, unit: 'inches' },
+        { label: "Thigh Circumference", value: orderDetails.stretchData.shalwar?.thighCircumference, unit: 'inches' },
+        { label: "Waist Circumference", value: orderDetails.stretchData.shalwar?.waistCircumference, unit: 'inches' }
+      ].map((field, index) =>
+        field.value ? (
+          <Grid item xs={12} sm={6} key={index}>
+            <Typography variant="h6">{field.label}</Typography>
+            <Typography variant="body2">
+              {field.value} {field.unit || ''}
+            </Typography>
+          </Grid>
+        ) : null
+      )}
+    </Grid>
+
+    {/* Fit Preferences */}
+    {orderDetails.stretchData.fitPreferences && (
+      <>
+        <Divider sx={{ my: 2 }} />
+        <Typography variant="h5">Fit Preferences</Typography>
+        <Grid container spacing={2}>
+          {[
+            { label: "Kameez Fit", value: orderDetails.stretchData.fitPreferences.kameezFit },
+            { label: "Neckline Style", value: orderDetails.stretchData.fitPreferences.necklineStyle },
+            { label: "Pant Style", value: orderDetails.stretchData.fitPreferences.pantStyle },
+            { label: "Sleeve Style", value: orderDetails.stretchData.fitPreferences.sleeveStyle }
+          ].map((field, index) =>
+            field.value ? (
+              <Grid item xs={12} sm={6} key={index}>
+                <Typography variant="h6">{field.label}</Typography>
+                <Typography variant="body2">{field.value}</Typography>
+              </Grid>
+            ) : null
+          )}
+        </Grid>
+      </>
+    )}
+
+    {/* Additional Measurements */}
+    <Divider sx={{ my: 2 }} />
+    <Typography variant="h5">Additional Information</Typography>
+    <Grid container spacing={2}>
+      {[
+        { label: "Height", value: orderDetails.stretchData.height, unit: 'cm' },
+        { label: "Weight", value: orderDetails.stretchData.weight, unit: 'kg' }
+      ].map((field, index) =>
+        field.value ? (
+          <Grid item xs={12} sm={6} key={index}>
+            <Typography variant="h6">{field.label}</Typography>
+            <Typography variant="body2">
+              {field.value} {field.unit || ''}
+            </Typography>
+          </Grid>
+        ) : null
+      )}
+    </Grid>
+
+    {/* Stitch Image */}
+    {orderDetails.stretchData.stitchImage && (
+      <>
+        <Divider sx={{ my: 2 }} />
+        <Typography variant="h5">Stitching Image</Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <CardMedia
+              component="img"
+              height="auto"
+              image={orderDetails.stretchData.stitchImage}
+              alt="Stitch Image"
+              sx={{ objectFit: "cover", borderRadius: 1 }}
+            />
+          </Grid>
+        </Grid>
+      </>
+    )}
+  </>
+)}
+
 
             <Box display="flex" justifyContent="flex-end" sx={{ mt: 3, mr: 2 }}>
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>

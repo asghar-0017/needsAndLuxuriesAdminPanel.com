@@ -82,7 +82,7 @@ const ProductCard = ({ product }) => {
             color="error"
             sx={{
               position: "absolute",
-              top: 80,
+              top: !product.discountprice ? 20 : 80,
               right: 50,
               backgroundColor: "red",
               color: "white",
@@ -111,8 +111,8 @@ const ProductCard = ({ product }) => {
               variant="h6"
               sx={{ marginRight: 1, fontWeight: "bold" }}>
               {product.newprice
-                ? `Rs ${product.newprice}`
-                : `Rs ${product.price}`}
+                ? `Rs ${product.newprice.toFixed(0)}`
+                : `Rs ${product.price.toFixed(0)}`}
             </Typography>
             {product.newprice && (
               <Typography
@@ -121,7 +121,7 @@ const ProductCard = ({ product }) => {
                   color: "red",
                   textDecoration: "line-through",
                 }}>
-                Rs {product.price}
+                Rs {product.price.toFixed(0)}
               </Typography>
             )}
           </div>

@@ -58,6 +58,8 @@ const ProductForm = ({
       stockStatus:
         initialValues.stockStatus || "",
       materials: initialValues.materials || [],
+      isStitched: initialValues.isStitched || false,
+      stitchedPrice: initialValues.stitchedPrice || "",
     },
   });
 
@@ -69,6 +71,7 @@ const ProductForm = ({
   const [imagePreview, setImagePreview] =
     useState(initialValues?.Imageurl || null);
   const isSale = watch("sale");
+  const isStitched = watch("isStitched");
 
   const sizes = ["S", "M", "L", "XL", "XXL"];
   const stock = ["In Stock", "Out of Stock"];
@@ -123,6 +126,13 @@ const ProductForm = ({
 
     formData.append("sale", isSale);
     formData.append("category", data.category);
+
+    if (isStitched && data.stitchedPrice) {
+      formData.append("stitchedPrice", data.stitchedPrice);
+    }
+
+    formData.append("isStitched", isStitched);
+
     setLoading(true);
 
     try {
@@ -614,6 +624,41 @@ const ProductForm = ({
               min: 0,
               max: 100,
             }}
+          />
+        </Grid>
+      )}
+
+
+<Grid item xs={12} md={6}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              {...register("isStitched")}
+              color="primary"
+              checked={isStitched}
+              onChange={(event) => {
+                const checked = event.target.checked;
+                setValue("isStitched", checked);
+              }}
+            />
+          }
+          label="Is Customizable?"
+        />
+      </Grid>
+
+      {/* Conditionally display the stitched price field */}
+      {isStitched && (
+        <Grid item xs={12} md={6}>
+          <TextField
+            {...register("stitchedPrice", { valueAsNumber: true })}
+            label="Customization Price"
+            type="number"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            error={!!errors.stitchedPrice}
+            helperText={errors.stitchedPrice ? errors.stitchedPrice.message : ""}
+            inputProps={{ min: 0 }}
           />
         </Grid>
       )}

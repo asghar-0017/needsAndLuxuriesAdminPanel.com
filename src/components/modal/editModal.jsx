@@ -23,8 +23,8 @@ const EditMeasurementsModal = ({ open, handleClose, stretchData, handleSave }) =
   };
 
   const saveChanges = () => {
-    handleSave(editedData);
     handleClose();
+    handleSave(editedData);
   };
 
   return (
@@ -48,9 +48,9 @@ const EditMeasurementsModal = ({ open, handleClose, stretchData, handleSave }) =
           Edit Measurements
         </Typography>
         <Divider sx={{ mb: 2 }} />
-
         {/* Kameez Measurements */}
         <Typography variant="h6">Kameez Measurements</Typography>
+        <br />
         <Grid container spacing={2}>
           {[
             { label: "Armhole Circumference", field: "armholeCircumference" },
@@ -78,6 +78,7 @@ const EditMeasurementsModal = ({ open, handleClose, stretchData, handleSave }) =
 
         {/* Shalwar Measurements */}
         <Typography variant="h6">Shalwar Measurements</Typography>
+        <br />
         <Grid container spacing={2}>
           {[
             { label: "Waist Circumference", field: "waistCircumferenceShalwar" },
@@ -102,6 +103,7 @@ const EditMeasurementsModal = ({ open, handleClose, stretchData, handleSave }) =
 
         {/* Fit Preferences */}
         <Typography variant="h6">Fit Preferences</Typography>
+        <br />
         <Grid container spacing={2}>
           {[
             { label: "Fit Type (Loose/Fitted)", field: "fitType" },
@@ -120,10 +122,10 @@ const EditMeasurementsModal = ({ open, handleClose, stretchData, handleSave }) =
         </Grid>
 
         <Box sx={{ mt: 3, textAlign: "right" }}>
-          <Button onClick={handleClose} sx={{ mr: 2 }}>
+          <Button onClick={handleClose} sx={{ mr: 2, color: "#00203F" }}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={saveChanges}>
+          <Button variant="contained" color="#00203F" onClick={saveChanges} style={{backgroundColor: "#ADF0D1"}}>
             Save Changes
           </Button>
         </Box>

@@ -11,11 +11,12 @@ import {
   Button,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { fetchData } from "../../config/apiServices/apiServices";
+import { fetchData, updateData } from "../../config/apiServices/apiServices";
 import Loader from "../loader/loader";
 import Back from "../button/back";
 import COD from "../../assets/images/cod.jpg";
 import EditMeasurementsModal from "../modal/editModal";
+import { showSuccessToast } from "../toast/toast";
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -73,11 +74,21 @@ const OrderDetailPage = () => {
     setIsModalOpen(false);
   };
 
-  const handleSaveMeasurements = (updatedData) => {
-    setOrderDetails((prevDetails) => ({
-      ...prevDetails,
-      stretchData: updatedData,
-    }));
+  const handleSaveMeasurements = async (updatedData) => {    
+    try {
+      let response = await updateData(`billing-details/${updatedData.orderId}`, {stretchData: updatedData}, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setOrderDetails((prevDetails) => ({
+        ...prevDetails,
+        stretchData: updatedData,
+      }));      
+      showSuccessToast("Data updated successfully.");
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
   };
 
   return (
@@ -501,9 +512,9 @@ const OrderDetailPage = () => {
               {orderDetails.stretchData && (
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="#00203F"
                   onClick={handleOpenModal}
-                  style={{ marginRight: "20px" }}
+                  style={{ marginRight: "20px", backgroundColor: "#ADF0D1" }}
                 >
                   {`Edit Stitching Data`}
                 </Button>

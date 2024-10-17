@@ -489,7 +489,7 @@ const OrderDetailPage = () => {
                 </Grid>
 
                 {/* Stitch Image */}
-                {orderDetails.stretchData.stitchImage && (
+                {orderDetails.stitchImage && (
                   <>
                     <Divider sx={{ my: 2 }} />
                     <Typography variant="h5">Stitching Image</Typography>
@@ -498,9 +498,9 @@ const OrderDetailPage = () => {
                         <CardMedia
                           component="img"
                           height="auto"
-                          image={orderDetails.stretchData.stitchImage}
+                          image={orderDetails.stitchImage}
                           alt="Stitch Image"
-                          sx={{ objectFit: "cover", borderRadius: 1 }}
+                          sx={{ objectFit: "cover", borderRadius: 1, width: "200px" }}
                         />
                       </Grid>
                     </Grid>

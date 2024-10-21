@@ -58,10 +58,13 @@ const OrderDetailPage = () => {
 
   const calculateTotalPrice = () => {
     if (!orderDetails) return 0;
-    return orderDetails.products.reduce(
-      (total, product) => total + product.price * product.quantity,
-      0
-    );
+    return orderDetails.products.reduce((total, product) => {
+      const productPrice = product.stitchedPrice
+        ? product.stitchedPrice + product.price
+        : product.price;
+
+      return total + productPrice * product.quantity;
+    }, 0);
   };
 
   const totalPrice = calculateTotalPrice();
@@ -74,17 +77,21 @@ const OrderDetailPage = () => {
     setIsModalOpen(false);
   };
 
-  const handleSaveMeasurements = async (updatedData) => {    
+  const handleSaveMeasurements = async (updatedData) => {
     try {
-      let response = await updateData(`billing-details/${updatedData.orderId}`, {stretchData: updatedData}, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      let response = await updateData(
+        `billing-details/${updatedData.orderId}`,
+        { stretchData: updatedData },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       setOrderDetails((prevDetails) => ({
         ...prevDetails,
         stretchData: updatedData,
-      }));      
+      }));
       showSuccessToast("Data updated successfully.");
     } catch (error) {
       console.error("Error updating data:", error);
@@ -266,6 +273,11 @@ const OrderDetailPage = () => {
                   <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                     {`Price: Rs ${product.price.toFixed(2)}`}
                   </Typography>
+                  {product.stitchedPrice && (
+                    <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                      {`Stitched Price: Rs ${product.stitchedPrice.toFixed(2)}`}
+                    </Typography>
+                  )}
                 </Box>
               </Box>
             ))}
@@ -500,7 +512,11 @@ const OrderDetailPage = () => {
                           height="auto"
                           image={orderDetails.stitchImage}
                           alt="Stitch Image"
-                          sx={{ objectFit: "cover", borderRadius: 1, width: "200px" }}
+                          sx={{
+                            objectFit: "cover",
+                            borderRadius: 1,
+                            width: "200px",
+                          }}
                         />
                       </Grid>
                     </Grid>

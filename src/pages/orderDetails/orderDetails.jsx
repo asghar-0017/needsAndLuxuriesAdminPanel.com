@@ -19,13 +19,15 @@ import {
   FormControl,
   MenuItem,
   Tooltip,
+  TablePagination,
 } from "@mui/material";
 import { AccessTime, CheckCircle, Cancel } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { fetchData, updateData } from "../../config/apiServices/apiServices";
+import { deleteDataById, fetchData, updateData } from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
 import { showSuccessToast } from "../../components/toast/toast";
 import Swal from "sweetalert2";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { ContentCopy } from "@mui/icons-material";
 import { SearchContext } from "../../context/context";
 import DatePickerComp from "../../components/datePicker/datePicker";
@@ -37,10 +39,26 @@ const OrderDetailsPage = () => {
   const [status, setStatus] = useState("All");
   const [filteredData, setFilteredData] = useState([]);
   const [tooltipText, setTooltipText] = useState("Copy order ID");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [disabledButtons, setDisabledButtons] = useState({});
 
   const navigate = useNavigate();
   const { searchQuery, selectedDate } = useContext(SearchContext);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedData = filteredData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
@@ -202,6 +220,39 @@ const OrderDetailsPage = () => {
       });
   };
 
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you want to delete this order?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: `Yes, Order Deleted successfully!`,
+      cancelButtonText: "Back",
+    });
+    if (result.isConfirmed) {
+      try {
+        let response = await deleteDataById(
+          "billing-details",
+          id
+        );
+        setProducts((prevProducts) =>
+          prevProducts.filter((order) => order.orderId !== id)
+        );
+
+        setFilteredData((prevFilteredData) =>
+          prevFilteredData.filter((order) => order.orderId !== id)
+        );
+        showSuccessToast(
+          "Order deleted successfully."
+        );        
+      } catch (error) {
+        console.error(`Error deleting`, error);
+      }
+    }
+  };
+
   return (
     <>
       {loading && <Loader open={loading} />}
@@ -334,7 +385,7 @@ const OrderDetailsPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredData.map((order) => (
+                {paginatedData.map((order) => (
                   <TableRow key={order._id}>
                     <TableCell>
                       <Box display="flex" alignItems="center">
@@ -342,7 +393,7 @@ const OrderDetailsPage = () => {
                           onClick={() => navigate(`/order/${order.orderId}`)}
                           sx={{
                             cursor: "pointer",
-                            color: "#00203F",
+                            color: "#3f51b5",
                             textDecoration: "underline",
                             marginRight: 1,
                           }}
@@ -354,7 +405,7 @@ const OrderDetailsPage = () => {
                             onClick={() => copyToClipboard(order.orderId)}
                             sx={{
                               cursor: "pointer",
-                              color: "#00203F",
+                              color: "#3f51b5",
                               fontSize: "20px",
                             }}
                           />
@@ -373,23 +424,22 @@ const OrderDetailsPage = () => {
                         <Button
                           style={{
                             marginRight: "10px",
-                            backgroundColor: "#ADF0D1",
                           }}
                           variant="contained"
-                          color="#00203F"
+                          color="primary"
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Dispatched")
                           }
-                          disabled={
-                            disabledButtons[order._id]?.Dispatched ||
-                            disabledButtons[order._id]?.Cancelled
-                          }
+                          disabled={disabledButtons[order._id]?.Dispatched}
                         >
                           Dispatch
                         </Button>
                         <Button
                           variant="contained"
                           color="error"
+                          style={{
+                            marginRight: "10px",
+                          }}
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Cancelled")
                           }
@@ -397,12 +447,36 @@ const OrderDetailsPage = () => {
                         >
                           Cancel
                         </Button>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                          onClick={()=>handleDelete(order.orderId)}
+                        >
+                          <DeleteIcon
+                            sx={{
+                              color: "red",
+                              cursor: "pointer"
+                            }}
+                          />
+                        </Box>
                       </Box>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              component="div"
+              count={filteredData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </TableContainer>
         </>
       )}

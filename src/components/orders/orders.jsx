@@ -278,6 +278,11 @@ const OrderDetailPage = () => {
                       {`Stitched Price: Rs ${product.stitchedPrice.toFixed(2)}`}
                     </Typography>
                   )}
+                  {product.isStitching && (
+                    <Button variant="body2" sx={{ fontWeight: "bold" }}>
+                      Stitching Data
+                    </Button>
+                  )}
                 </Box>
               </Box>
             ))}

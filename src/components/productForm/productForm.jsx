@@ -58,7 +58,7 @@ const ProductForm = ({
       stockStatus:
         initialValues.stockStatus || "",
       materials: initialValues.materials || [],
-      isStitched: initialValues.isStitched || false,
+      isStitched: initialValues.isStitching || false,
       stitchedPrice: initialValues.stitchedPrice || "",
     },
   });
@@ -71,7 +71,7 @@ const ProductForm = ({
   const [imagePreview, setImagePreview] =
     useState(initialValues?.Imageurl || null);
   const isSale = watch("sale");
-  const isStitched = watch("isStitched");
+  const isStitching = watch("isStitching");
 
   const sizes = ["S", "M", "L", "XL", "XXL"];
   const stock = ["In Stock", "Out of Stock"];
@@ -127,11 +127,11 @@ const ProductForm = ({
     formData.append("sale", isSale);
     formData.append("category", data.category);
 
-    if (isStitched && data.stitchedPrice) {
+    if (isStitching && data.stitchedPrice) {
       formData.append("stitchedPrice", data.stitchedPrice);
     }
 
-    formData.append("isStitched", isStitched);
+    formData.append("isStitching", isStitching);
 
     setLoading(true);
 
@@ -633,12 +633,12 @@ const ProductForm = ({
         <FormControlLabel
           control={
             <Checkbox
-              {...register("isStitched")}
+              {...register("isStitching")}
               color="primary"
-              checked={isStitched}
+              checked={isStitching}
               onChange={(event) => {
                 const checked = event.target.checked;
-                setValue("isStitched", checked);
+                setValue("isStitching", checked);
               }}
             />
           }
@@ -647,7 +647,7 @@ const ProductForm = ({
       </Grid>
 
       {/* Conditionally display the stitched price field */}
-      {isStitched && (
+      {isStitching && (
         <Grid item xs={12} md={6}>
           <TextField
             {...register("stitchedPrice", { valueAsNumber: true })}

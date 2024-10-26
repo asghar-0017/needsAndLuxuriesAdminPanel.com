@@ -311,6 +311,21 @@ export default function WatchFields({
           label="Waterproof?"
         />
       </Grid>
+      <Grid item xs={12} md={12}>
+        <TextField
+          {...register("description")}
+          label="Description"
+          variant="outlined"
+          multiline
+          rows={4}
+          fullWidth
+          margin="normal"
+          error={!!errors.description}
+          helperText={
+            errors.description?.message || ""
+          }
+        />
+      </Grid>
 
       {/* <Grid item xs={12}>
         <Button

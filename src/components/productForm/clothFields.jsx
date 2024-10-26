@@ -9,8 +9,8 @@ import {
   FormControlLabel,
   Checkbox,
   IconButton,
-  FormGroup ,
-  Typography 
+  FormGroup,
+  Typography,
 } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -28,7 +28,7 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
-const materials = [ 
+const materials = [
   "Polyester",
   "Cotton",
   "Silk",
@@ -38,11 +38,12 @@ const sizes = ["S", "M", "L", "XL", "XXL"];
 const stock = ["In Stock", "Out of Stock"];
 export default function ClothFields({
   initialValues = {},
-
 }) {
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [customCollection, setCustomCollection] = useState("");
+  const [imagePreview, setImagePreview] =
+    useState(null);
+  const [customCollection, setCustomCollection] =
+    useState("");
 
   const {
     register,
@@ -59,7 +60,8 @@ export default function ClothFields({
     setImage(file);
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result);
+      reader.onloadend = () =>
+        setImagePreview(reader.result);
       reader.readAsDataURL(file);
     }
   };
@@ -95,9 +97,13 @@ export default function ClothFields({
     );
   };
 
-
   return (
-    <Grid container spacing={2}>
+    <Grid
+      container
+      spacing={2}
+      sx={{
+        paddingLeft: "22px",
+      }}>
       <Grid item xs={12} md={6}>
         <TextField
           {...register("title")}
@@ -112,7 +118,9 @@ export default function ClothFields({
 
       <Grid item xs={12} md={6}>
         <TextField
-          {...register("price", { valueAsNumber: true })}
+          {...register("price", {
+            valueAsNumber: true,
+          })}
           label="Price"
           type="number"
           variant="outlined"
@@ -123,7 +131,6 @@ export default function ClothFields({
         />
       </Grid>
 
-
       <Grid item xs={12} md={6}>
         <TextField
           {...register("review")}
@@ -132,40 +139,61 @@ export default function ClothFields({
           fullWidth
           margin="normal"
           error={!!errors.review}
-          helperText={errors.review?.message || ""}
+          helperText={
+            errors.review?.message || ""
+          }
         />
       </Grid>
 
       <Grid item xs={12} md={6}>
         <TextField
-          {...register("quantity", { valueAsNumber: true })}
+          {...register("quantity", {
+            valueAsNumber: true,
+          })}
           label="Quantity"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           error={!!errors.quantity}
-          helperText={errors.quantity?.message || ""}
+          helperText={
+            errors.quantity?.message || ""
+          }
         />
       </Grid>
 
       <Grid item xs={12} md={6}>
         <FormControl margin="normal" fullWidth>
-          <InputLabel id="collection-label">Sub Collection</InputLabel>
+          <InputLabel id="collection-label">
+            Sub Collection
+          </InputLabel>
           <Select
             {...register("Collection")}
             labelId="collection-label"
             onChange={(event) => {
-              setValue("collection", event.target.value);
-              if (event.target.value === "Other") setCustomCollection("");
-            }}
-          >
+              setValue(
+                "collection",
+                event.target.value
+              );
+              if (event.target.value === "Other")
+                setCustomCollection("");
+            }}>
             <MenuItem value="">None</MenuItem>
-            <MenuItem value="Summer">Summer</MenuItem>
-            <MenuItem value="Winter">Winter</MenuItem>
-            <MenuItem value="Autumn">Autumn</MenuItem>
-            <MenuItem value="Spring">Spring</MenuItem>
-            <MenuItem value="Other">Other</MenuItem>
+            <MenuItem value="Summer">
+              Summer
+            </MenuItem>
+            <MenuItem value="Winter">
+              Winter
+            </MenuItem>
+            <MenuItem value="Autumn">
+              Autumn
+            </MenuItem>
+            <MenuItem value="Spring">
+              Spring
+            </MenuItem>
+            <MenuItem value="Other">
+              Other
+            </MenuItem>
           </Select>
         </FormControl>
       </Grid>
@@ -178,85 +206,87 @@ export default function ClothFields({
             fullWidth
             margin="normal"
             value={customCollection}
-            onChange={(event) => setCustomCollection(event.target.value)}
+            onChange={(event) =>
+              setCustomCollection(
+                event.target.value
+              )
+            }
           />
         </Grid>
       )}
       <Grid item xs={12} md={6}>
-          <FormControl margin="normal" fullWidth>
-            <InputLabel id="category-label">
-              Sub Category
-            </InputLabel>
-            <Select
-              {...register("subCategory", {
-                required: "Category is required",
-              })}
-              labelId="category-label"
-              defaultValue={
-                initialValues.subCategory || ""
-              }
-              error={!!errors.subCategory}
-              onChange={(event) => {
-                setValue(
-                  "subCategory",
-                  event.target.value
-                );
-              }}>
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value="dresses">
-                Dresses
-              </MenuItem>
-              <MenuItem value="tops">
-                Tops
-              </MenuItem>
-              <MenuItem value="skirts">
-                Skirts
-              </MenuItem>
-              <MenuItem value="pants">
-                Pants
-              </MenuItem>
-              <MenuItem value="jackets">
-                Jackets
-              </MenuItem>
-            </Select>
-            {errors.subCategory && (
-              <Typography color="error">
-                {errors.subCategory.message}
-              </Typography>
-            )}
-          </FormControl>
-        </Grid>
-  <Grid item xs={12} md={6}>
-          <FormGroup>
-            <Typography variant="h6">
-              Materials
+        <FormControl margin="normal" fullWidth>
+          <InputLabel id="category-label">
+            Sub Category
+          </InputLabel>
+          <Select
+            {...register("subCategory", {
+              required: "Category is required",
+            })}
+            labelId="category-label"
+            defaultValue={
+              initialValues.subCategory || ""
+            }
+            error={!!errors.subCategory}
+            onChange={(event) => {
+              setValue(
+                "subCategory",
+                event.target.value
+              );
+            }}>
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value="dresses">
+              Dresses
+            </MenuItem>
+            <MenuItem value="tops">Tops</MenuItem>
+            <MenuItem value="skirts">
+              Skirts
+            </MenuItem>
+            <MenuItem value="pants">
+              Pants
+            </MenuItem>
+            <MenuItem value="jackets">
+              Jackets
+            </MenuItem>
+          </Select>
+          {errors.subCategory && (
+            <Typography color="error">
+              {errors.subCategory.message}
             </Typography>
-            {materials.map((material) => (
-              <FormControlLabel
-                key={material}
-                control={
-                  <Checkbox
-                    {...register("materials")}
-                    value={material}
-                    checked={(
-                      watch("materials") || []
-                    ).includes(material)}
-                    onChange={
-                      handleMaterialChange
-                    }
-                  />
-                }
-                label={material}
-              />
-            ))}
-          </FormGroup>
-        </Grid>
- 
+          )}
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <FormGroup>
+          <Typography variant="h6">
+            Materials
+          </Typography>
+          {materials.map((material) => (
+            <FormControlLabel
+              key={material}
+              control={
+                <Checkbox
+                  {...register("materials")}
+                  value={material}
+                  checked={(
+                    watch("materials") || []
+                  ).includes(material)}
+                  onChange={handleMaterialChange}
+                />
+              }
+              label={material}
+            />
+          ))}
+        </FormGroup>
+      </Grid>
+
       <Grid item xs={12} md={6}>
         <TextField
-          {...register("weight", { valueAsNumber: true })}
+          {...register("weight", {
+            valueAsNumber: true,
+          })}
           label="Weight (g)"
           type="number"
           variant="outlined"
@@ -267,7 +297,9 @@ export default function ClothFields({
 
       <Grid item xs={12} md={6}>
         <FormControl margin="normal" fullWidth>
-          <InputLabel id="size-label">Size</InputLabel>
+          <InputLabel id="size-label">
+            Size
+          </InputLabel>
           <Select {...register("size")}>
             <MenuItem value="">None</MenuItem>
             {sizes.map((size) => (
@@ -279,18 +311,23 @@ export default function ClothFields({
         </FormControl>
       </Grid>
 
-
       <Grid item xs={12} md={6}>
         <FormControl margin="normal" fullWidth>
-          <InputLabel id="stock-label">Stock</InputLabel>
+          <InputLabel id="stock-label">
+            Stock
+          </InputLabel>
           <Select {...register("stockStatus")}>
-            <MenuItem value="In Stock">In Stock</MenuItem>
-            <MenuItem value="Out of Stock">Out of Stock</MenuItem>
+            <MenuItem value="In Stock">
+              In Stock
+            </MenuItem>
+            <MenuItem value="Out of Stock">
+              Out of Stock
+            </MenuItem>
           </Select>
         </FormControl>
       </Grid>
 
-   <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={6}>
         <FormControlLabel
           control={
             <Checkbox
@@ -343,8 +380,7 @@ export default function ClothFields({
         </Grid>
       )}
 
- 
-<Grid item xs={12} md={6}>
+      <Grid item xs={12} md={6}>
         <FormControlLabel
           control={
             <Checkbox
@@ -352,7 +388,8 @@ export default function ClothFields({
               color="primary"
               checked={isStitching}
               onChange={(event) => {
-                const checked = event.target.checked;
+                const checked =
+                  event.target.checked;
                 setValue("isStitching", checked);
               }}
             />
@@ -364,20 +401,26 @@ export default function ClothFields({
       {isStitching && (
         <Grid item xs={12} md={6}>
           <TextField
-            {...register("stitchedPrice", { valueAsNumber: true })}
+            {...register("stitchedPrice", {
+              valueAsNumber: true,
+            })}
             label="Customization Price"
             type="number"
             variant="outlined"
             fullWidth
             margin="normal"
             error={!!errors.stitchedPrice}
-            helperText={errors.stitchedPrice ? errors.stitchedPrice.message : ""}
+            helperText={
+              errors.stitchedPrice
+                ? errors.stitchedPrice.message
+                : ""
+            }
             inputProps={{ min: 0 }}
           />
         </Grid>
       )}
 
-<Grid item xs={12} md={12}>
+      <Grid item xs={12} md={12}>
         <TextField
           {...register("description")}
           label="Description"
@@ -387,28 +430,28 @@ export default function ClothFields({
           fullWidth
           margin="normal"
           error={!!errors.description}
-          helperText={errors.description?.message || ""}
+          helperText={
+            errors.description?.message || ""
+          }
         />
       </Grid>
       <Grid item xs={12} md={12}>
-
-      <TextField
-        {...register("otherInfo")}
-        label="Other Information"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        multiline
-        rows={4}
-        error={!!errors.otherInfo}
-        helperText={
-          errors.otherInfo
-            ? errors.otherInfo.message
-            : ""
-        }
-      />
+        <TextField
+          {...register("otherInfo")}
+          label="Other Information"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          multiline
+          rows={4}
+          error={!!errors.otherInfo}
+          helperText={
+            errors.otherInfo
+              ? errors.otherInfo.message
+              : ""
+          }
+        />
+      </Grid>
     </Grid>
-    </Grid>
-
   );
 }

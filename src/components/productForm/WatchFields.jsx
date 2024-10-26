@@ -30,9 +30,13 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function WatchFields({ sizes, stock }) {
+export default function WatchFields({
+  sizes,
+  stock,
+}) {
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] =
+    useState(null);
 
   const {
     register,
@@ -64,10 +68,17 @@ export default function WatchFields({ sizes, stock }) {
   const waterproof = watch("waterproof", false);
 
   return (
-    <Grid container spacing={2}>
+    <Grid
+      container
+      spacing={2}
+      sx={{
+        paddingLeft: "22px",
+      }}>
       <Grid item xs={12} md={6}>
         <TextField
-          {...register("title", { required: "Title is required" })}
+          {...register("title", {
+            required: "Title is required",
+          })}
           label="Title"
           variant="outlined"
           fullWidth
@@ -79,7 +90,10 @@ export default function WatchFields({ sizes, stock }) {
 
       <Grid item xs={12} md={6}>
         <TextField
-          {...register("price", { required: "Price is required", valueAsNumber: true })}
+          {...register("price", {
+            required: "Price is required",
+            valueAsNumber: true,
+          })}
           label="Price"
           type="number"
           variant="outlined"
@@ -94,8 +108,16 @@ export default function WatchFields({ sizes, stock }) {
         <TextField
           {...register("review", {
             required: "Review is required",
-            min: { value: 0, message: "Review must be at least 0" },
-            max: { value: 5, message: "Review must be 5 or below" },
+            min: {
+              value: 0,
+              message:
+                "Review must be at least 0",
+            },
+            max: {
+              value: 5,
+              message:
+                "Review must be 5 or below",
+            },
           })}
           label="Review"
           type="number"
@@ -103,58 +125,81 @@ export default function WatchFields({ sizes, stock }) {
           fullWidth
           margin="normal"
           error={!!errors.review}
-          helperText={errors.review?.message || ""}
+          helperText={
+            errors.review?.message || ""
+          }
         />
       </Grid>
 
       <Grid item xs={12} md={6}>
         <TextField
-          {...register("Quantity", { required: "Quantity is required", valueAsNumber: true })}
+          {...register("Quantity", {
+            required: "Quantity is required",
+            valueAsNumber: true,
+          })}
           label="Quantity"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           error={!!errors.Quantity}
-          helperText={errors.Quantity?.message || ""}
+          helperText={
+            errors.Quantity?.message || ""
+          }
         />
       </Grid>
 
       <Grid item xs={12} md={6}>
         <TextField
-          {...register("weight", { required: "Weight is required", valueAsNumber: true })}
+          {...register("weight", {
+            required: "Weight is required",
+            valueAsNumber: true,
+          })}
           label="Weight (g)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           error={!!errors.weight}
-          helperText={errors.weight?.message || ""}
+          helperText={
+            errors.weight?.message || ""
+          }
         />
       </Grid>
 
       <Grid item xs={12} md={6}>
         <TextField
-          {...register("warrantyYears", { required: "Warranty years is required", valueAsNumber: true })}
+          {...register("warrantyYears", {
+            required:
+              "Warranty years is required",
+            valueAsNumber: true,
+          })}
           label="Warranty Years"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           error={!!errors.warrantyYears}
-          helperText={errors.warrantyYears?.message || ""}
+          helperText={
+            errors.warrantyYears?.message || ""
+          }
         />
       </Grid>
 
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={12}>
         <FormControl margin="normal" fullWidth>
-          <InputLabel id="size-label">Size</InputLabel>
+          <InputLabel id="size-label">
+            Size
+          </InputLabel>
           <Select
-            {...register("size", { required: "Size is required" })}
+            {...register("size", {
+              required: "Size is required",
+            })}
             labelId="size-label"
-            defaultValue={initialValues.size || ""}
-            error={!!errors.size}
-          >
+            defaultValue={
+              initialValues.size || ""
+            }
+            error={!!errors.size}>
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
@@ -164,43 +209,66 @@ export default function WatchFields({ sizes, stock }) {
               </MenuItem>
             ))}
           </Select>
-          {errors.size && <Typography color="error">{errors.size.message}</Typography>}
+          {errors.size && (
+            <Typography color="error">
+              {errors.size.message}
+            </Typography>
+          )}
         </FormControl>
       </Grid>
 
       {initialValues._id && (
         <Grid item xs={12} md={6}>
           <FormControl margin="normal" fullWidth>
-            <InputLabel id="stock-label">Stock</InputLabel>
+            <InputLabel id="stock-label">
+              Stock
+            </InputLabel>
             <Select
               {...register("stockStatus")}
               labelId="stock-label"
-              defaultValue={initialValues.stockStatus || ""}
+              defaultValue={
+                initialValues.stockStatus || ""
+              }
               error={!!errors.stockStatus}
-              onChange={(event) => setValue("stock", event.target.value)}
-            >
+              onChange={(event) =>
+                setValue(
+                  "stock",
+                  event.target.value
+                )
+              }>
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
               {stock.map((stockItem) => (
-                <MenuItem key={stockItem} value={stockItem}>
+                <MenuItem
+                  key={stockItem}
+                  value={stockItem}>
                   {stockItem}
                 </MenuItem>
               ))}
             </Select>
-            {errors.stock && <Typography color="error">{errors.stock.message}</Typography>}
+            {errors.stock && (
+              <Typography color="error">
+                {errors.stock.message}
+              </Typography>
+            )}
           </FormControl>
         </Grid>
       )}
 
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={2}>
         <FormControlLabel
           control={
             <Checkbox
               {...register("sale")}
               color="primary"
               checked={isSale}
-              onChange={(event) => setValue("sale", event.target.checked)}
+              onChange={(event) =>
+                setValue(
+                  "sale",
+                  event.target.checked
+                )
+              }
             />
           }
           label="Is On Sale?"
@@ -208,7 +276,7 @@ export default function WatchFields({ sizes, stock }) {
       </Grid>
 
       {isSale && (
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={10}>
           <TextField
             {...register("discountPrice")}
             label="Discount Percentage"
@@ -217,20 +285,27 @@ export default function WatchFields({ sizes, stock }) {
             fullWidth
             margin="normal"
             error={!!errors.discountPrice}
-            helperText={errors.discountPrice?.message || ""}
+            helperText={
+              errors.discountPrice?.message || ""
+            }
             inputProps={{ min: 0, max: 100 }}
           />
         </Grid>
       )}
 
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={12}>
         <FormControlLabel
           control={
             <Checkbox
               {...register("waterproof")}
               color="primary"
               checked={waterproof}
-              onChange={(event) => setValue("waterproof", event.target.checked)}
+              onChange={(event) =>
+                setValue(
+                  "waterproof",
+                  event.target.checked
+                )
+              }
             />
           }
           label="Waterproof?"

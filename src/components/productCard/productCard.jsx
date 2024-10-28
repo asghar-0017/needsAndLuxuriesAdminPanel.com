@@ -27,10 +27,17 @@ import { SentimentDissatisfied } from "@mui/icons-material";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const handleClick = () => {
     navigate(`/edit-product/${product._id}`, {
       state: product,
     });
+  };
+
+  const handleTitleClick = (e) => {
+    e.stopPropagation();
+    setIsExpanded((prev) => !prev);
   };
 
   return (
@@ -94,7 +101,14 @@ const ProductCard = ({ product }) => {
           <Typography
             gutterBottom
             variant="h6"
-            component="div">
+            onClick={handleTitleClick}
+            component="div"  sx={{
+              display: "-webkit-box",
+              overflow: "hidden",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: isExpanded ? "none" : 2,
+              cursor: "pointer",
+            }}>
             {product.title}
           </Typography>
           <Rating
@@ -120,6 +134,8 @@ const ProductCard = ({ product }) => {
                 sx={{
                   color: "red",
                   textDecoration: "line-through",
+                  fontSize: "14px",
+                  paddingTop: "1px"
                 }}>
                 Rs {product.price.toFixed(0)}
               </Typography>

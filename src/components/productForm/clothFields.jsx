@@ -147,7 +147,7 @@ export default function ClothFields({
 
       <Grid item xs={12} md={6}>
         <TextField
-          {...register("quantity", {
+          {...register("Quantity", {
             valueAsNumber: true,
           })}
           label="Quantity"

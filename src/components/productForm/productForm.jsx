@@ -89,7 +89,7 @@ const ProductForm = ({
       "Quantity",
       data.Quantity || 0
     );
-    formData.append(
+    if(data.category != "Clothes") formData.append(
       "warrantyYears",
       data.warrantyYears
     );

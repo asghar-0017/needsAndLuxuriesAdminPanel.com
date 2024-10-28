@@ -270,7 +270,7 @@ export default function WatchFields({
       {isSale && (
         <Grid item xs={12} md={10}>
           <TextField
-            {...register("discountPrice")}
+            {...register("discountprice")}
             label="Discount Percentage"
             type="number"
             variant="outlined"

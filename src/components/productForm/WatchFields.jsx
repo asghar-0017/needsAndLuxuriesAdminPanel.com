@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   TextField,
@@ -33,6 +33,7 @@ const VisuallyHiddenInput = styled("input")({
 export default function WatchFields({
   sizes,
   stock,
+  initialValues
 }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] =
@@ -45,24 +46,15 @@ export default function WatchFields({
     formState: { errors },
   } = useFormContext();
 
-  const initialValues = watch();
+  // const initialValues = watch();
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setImage(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+  useEffect(() => {
+    if (initialValues) {
+      Object.keys(initialValues).forEach((key) => {
+        setValue(key, initialValues[key]);
+      });
     }
-  };
-
-  const handleRemoveImage = () => {
-    setImage(null);
-    setImagePreview(null);
-  };
+  }, [initialValues, setValue]);
 
   const isSale = watch("sale", false);
   const waterproof = watch("waterproof", false);
@@ -278,15 +270,15 @@ export default function WatchFields({
       {isSale && (
         <Grid item xs={12} md={10}>
           <TextField
-            {...register("discountPrice")}
+            {...register("discountprice")}
             label="Discount Percentage"
             type="number"
             variant="outlined"
             fullWidth
             margin="normal"
-            error={!!errors.discountPrice}
+            error={!!errors.discountprice}
             helperText={
-              errors.discountPrice?.message || ""
+              errors.discountprice?.message || ""
             }
             inputProps={{ min: 0, max: 100 }}
           />

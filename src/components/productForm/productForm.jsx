@@ -1,5 +1,4 @@
-// ProductForm.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -19,12 +18,12 @@ import {
   FormProvider,
 } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import {
-  CloudUpload,
-  Close,
-} from "@mui/icons-material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloseIcon from "@mui/icons-material/Close";
 import WatchFields from "./WatchFields";
 import ClothFields from "./clothFields";
+import { deleteDataById } from "../../config/apiServices/apiServices";
+import { showSuccessToast } from "../toast/toast";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -42,6 +41,7 @@ const ProductForm = ({
   initialValues = {},
   onSubmitSuccess,
 }) => {
+ 
   const navigate = useNavigate();
   const methods = useForm();
   const {
@@ -52,7 +52,11 @@ const ProductForm = ({
     formState: { errors },
     reset,
   } = methods;
-
+  useEffect(() => {
+    if (initialValues && Object.keys(initialValues).length > 0) {
+      reset(initialValues); // Reset form to initialValues when they are present
+    }
+  }, [initialValues, reset]);
   const [loading, setLoading] = useState(false);
   const [customCollection, setCustomCollection] =
     useState();
@@ -66,7 +70,7 @@ const ProductForm = ({
       return;
     }
     const formData = new FormData();
-    formData.append(
+    if(data.category != "Watches") formData.append(
       "collection",
       data.collection === "Other"
         ? customCollection
@@ -85,8 +89,12 @@ const ProductForm = ({
       "Quantity",
       data.Quantity || 0
     );
-    formData.append("weight", data.weight || 0);
     formData.append(
+      "warrantyYears",
+      data.warrantyYears
+    );
+    formData.append("weight", data.weight || 0);
+    if(data.category != "Watches") formData.append(
       "isStitching",
       data.isStitching || false
     );
@@ -96,7 +104,7 @@ const ProductForm = ({
     )
       ? data.materials.join(",")
       : "";
-    formData.append("materials", materials);
+    if(data.category != "Watches") formData.append("materials", materials);
 
     formData.append("size", data.size);
 
@@ -107,27 +115,31 @@ const ProductForm = ({
       );
     if (isSale && data.discountPrice)
       formData.append(
-        "discountPrice",
+        "discountprice",
         data.discountPrice
       );
     formData.append("sale", isSale);
     formData.append("category", data.category);
-    formData.append(
+    if(data.category != "Watches") formData.append(
       "subCategory",
       data.subCategory
     );
 
-    formData.append(
-      "SelectedCategory",
-      data.SelectedCategory
-    );
+    // formData.append(
+    //   "SelectedCategory",
+    //   data.SelectedCategory
+    // );
 
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
     setLoading(true);
     try {
       await onSubmitSuccess(formData);
-      reset();
-      setImage(null);
-      setImagePreview(null);
+      
+      // reset();
+      // setImage(null);
+      // setImagePreview(null);
     } catch (error) {
       console.error(
         "Error creating product:",
@@ -154,6 +166,25 @@ const ProductForm = ({
     setImagePreview(null);
   };
 
+  const handleDelete = async () => {
+    try {
+      let response = await deleteDataById(
+        "product-delete",
+        initialValues._id
+      );
+      console.log(response);
+      showSuccessToast(
+        "Product deleted successfully."
+      );
+      navigate(-1);
+    } catch (error) {
+      console.error(
+        "Error deleting product:",
+        error
+      );
+    }
+  };
+
   return (
     <Box
       component="form"
@@ -177,6 +208,7 @@ const ProductForm = ({
       </Typography>
       <FormProvider {...methods}>
         <Grid container spacing={3}>
+          {!initialValues._id && (
           <Grid item xs={12} md={12}>
             <FormControl fullWidth>
               <InputLabel>Category</InputLabel>
@@ -209,21 +241,23 @@ const ProductForm = ({
               )}
             </FormControl>
           </Grid>
+          )}
 
-          {watch("category") === "Watches" && (
+          {(watch("category") === "Watches" || (initialValues && initialValues.category === "Watches")) && (
             <WatchFields
               sizes={["S", "M", "L", "XL", "XXL"]}
               stock={["In Stock", "Out of Stock"]}
+              initialValues={initialValues}
             />
           )}
-          {watch("category") === "Clothes" && (
+          {(watch("category") === "Clothes" || (initialValues && initialValues.category === "Clothes")) && (
             <ClothFields
               sizes={["S", "M", "L", "XL", "XXL"]}
               stock={["In Stock", "Out of Stock"]}
             />
           )}
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Box
               display="flex"
               alignItems="center"
@@ -274,27 +308,84 @@ const ProductForm = ({
                 </>
               )}
             </Box>
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              disabled={loading}>
-              {loading ? (
-                <CircularProgress
-                  size={24}
-                  color="inherit"
-                />
-              ) : initialValues._id ? (
-                "Update Product"
-              ) : (
-                "Add Product"
-              )}
-            </Button>
-          </Grid>
+           <Grid item xs={12}>
+        <Button
+          component="label"
+          variant="contained"
+          startIcon={<CloudUploadIcon />}
+          sx={{ marginTop: 2, width: "100%", backgroundColor: "#ADF0D1" }}
+        >
+          Upload Image
+          <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
+        </Button>
+
+        {imagePreview && (
+          <Box
+            sx={{
+              position: "relative",
+              mt: 2,
+              maxWidth: "100%",
+              display: "block",
+              mx: "auto",
+            }}
+          >
+            <IconButton
+              onClick={handleRemoveImage}
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                background: "rgba(255, 255, 255, 0.8)",
+                "&:hover": { background: "rgba(255, 255, 255, 1)" },
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <Box
+              component="img"
+              src={imagePreview}
+              alt="Image Preview"
+              sx={{ maxWidth: "100%", height: "500px", display: "block" }}
+            />
+          </Box>
+        )}
+      </Grid>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: 2,
+          width: "100%",
+        }}>
+        {initialValues._id && (
+          <Button
+            onClick={() => handleDelete()}
+            variant="contained"
+            color="error">
+            Delete
+          </Button>
+        )}
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          style={{ marginLeft: "10px" }}>
+          {loading ? (
+            <CircularProgress
+              size={24}
+              color="inherit"
+            />
+          ) : initialValues._id ? (
+            "Update Product"
+          ) : (
+            "Add Product"
+          )}
+        </Button>
+      </Box>
         </Grid>
       </FormProvider>
     </Box>

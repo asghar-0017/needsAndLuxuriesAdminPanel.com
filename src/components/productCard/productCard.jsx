@@ -231,21 +231,15 @@ export default function ProductCardWrapper() {
               onChange={handleCategoryChange}
               label="Category">
               <MenuItem value="All">All</MenuItem>
-              <MenuItem value="dresses">
-                Dresses
-              </MenuItem>
-              <MenuItem value="tops">
-                Tops
-              </MenuItem>
-              <MenuItem value="skirts">
-                Skirts
-              </MenuItem>
-              <MenuItem value="pants">
-                Pants
-              </MenuItem>
-              <MenuItem value="jackets">
-                Jackets
-              </MenuItem>
+                <MenuItem value="Clothes">
+                  Clothes
+                </MenuItem>
+                <MenuItem value="Watches">
+                  Watches
+                </MenuItem>
+                <MenuItem value="Jackets">
+                  Jackets
+                </MenuItem>
             </Select>
           </FormControl>
 

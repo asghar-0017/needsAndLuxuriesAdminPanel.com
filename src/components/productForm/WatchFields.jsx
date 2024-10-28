@@ -270,7 +270,7 @@ export default function WatchFields({
       {isSale && (
         <Grid item xs={12} md={10}>
           <TextField
-            {...register("discountprice")}
+            {...register("discountPrice")}
             label="Discount Percentage"
             type="number"
             variant="outlined"
@@ -278,7 +278,7 @@ export default function WatchFields({
             margin="normal"
             error={!!errors.discountprice}
             helperText={
-              errors.discountprice?.message || ""
+              errors.discountPrice?.message || ""
             }
             inputProps={{ min: 0, max: 100 }}
           />

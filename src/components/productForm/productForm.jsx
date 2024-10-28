@@ -310,7 +310,7 @@ const ProductForm = ({
             </Box>
           </Grid> */}
 
-           <Grid item xs={12}>
+           {watch("category") !== undefined && (<><Grid item xs={12}>
         <Button
           component="label"
           variant="contained"
@@ -386,6 +386,7 @@ const ProductForm = ({
           )}
         </Button>
       </Box>
+      </>)}
         </Grid>
       </FormProvider>
     </Box>

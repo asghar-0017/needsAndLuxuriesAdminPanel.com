@@ -310,7 +310,7 @@ export default function ClothFields({
           </Select>
         </FormControl>
       </Grid>
-
+      {initialValues._id && (
       <Grid item xs={12} md={6}>
         <FormControl margin="normal" fullWidth>
           <InputLabel id="stock-label">
@@ -326,7 +326,7 @@ export default function ClothFields({
           </Select>
         </FormControl>
       </Grid>
-
+      )}
       <Grid item xs={12} md={6}>
         <FormControlLabel
           control={

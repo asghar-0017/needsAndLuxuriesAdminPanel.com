@@ -417,7 +417,7 @@ const OrderDetailsPage = () => {
                     <TableCell>
                       {new Date(order.orderDate).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>{`${order.address}, ${order.apartment}, ${order.postCode}`}</TableCell>
+                    <TableCell>{`${order?.address}, ${order?.apartment}, ${order?.postCode}`}</TableCell>
                     <TableCell>{order.orderStatus}</TableCell>
                     <TableCell>
                       <Box display="flex" flexDirection="row" flexWrap="nowrap">

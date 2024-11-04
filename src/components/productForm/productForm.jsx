@@ -94,10 +94,12 @@ const ProductForm = ({
       data.warrantyYears
     );
     formData.append("weight", data.weight || 0);
-    if(data.category != "Watches") formData.append(
+    if(data.category != "Watches"){ formData.append(
       "isStitching",
       data.isStitching || false
     );
+    formData.append("stitchedPrice", data.stitchedPrice)
+  }
 
     const materials = Array.isArray(
       data.materials

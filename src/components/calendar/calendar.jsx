@@ -4,8 +4,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import "../../assets/styles/mainScreen.css";
+import { useNavigate } from "react-router-dom";
+import "../../assets/styles/mainScreen.css"
 
 const FullCalendarComponent = ({ orders }) => {
+  const navigate = useNavigate();
   const orderCountByDate = {};
 
   orders.forEach((order) => {
@@ -16,8 +19,14 @@ const FullCalendarComponent = ({ orders }) => {
   const events = Object.keys(orderCountByDate).map((date) => ({
     title: `Orders: ${orderCountByDate[date]}`,
     start: date, 
-    end: date,   
+    end: date,
+    extendedProps: { orderDate: date }   
   }));
+
+  const handleEventClick = (clickInfo) => {
+    const selectedDateByCalendar = clickInfo.event.extendedProps.orderDate;
+    navigate("/order-details", { state: { selectedDateByCalendar } });
+  };
 
   return (
     <div>
@@ -27,6 +36,7 @@ const FullCalendarComponent = ({ orders }) => {
         events={events}
         editable={false}
         selectable={true}
+        eventClick={handleEventClick}
       />
     </div>
   );

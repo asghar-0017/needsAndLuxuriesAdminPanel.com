@@ -495,7 +495,7 @@ const OrderDetailPage = () => {
                       </Grid>
                   
                       {/* Stitch Image */}
-                      {(orderDetails.products[0]?.stitchImage && orderDetails.products[0]?.stitchImage == false) && (
+                      {(orderDetails.products[0]?.stitchImage) && (
                         <>
                           <Divider sx={{ my: 2 }} />
                           <Typography variant="h5">Stitching Image</Typography>

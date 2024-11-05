@@ -114,3 +114,7 @@
 .inputColor{
   color: #00203F;
 }
+
+.fc-event {
+  cursor: pointer; /* Change cursor to pointer for events */
+}

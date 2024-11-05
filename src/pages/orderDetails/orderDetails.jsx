@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   Container,
   Grid,
@@ -22,7 +22,7 @@ import {
   TablePagination,
 } from "@mui/material";
 import { AccessTime, CheckCircle, Cancel } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { deleteDataById, fetchData, updateData } from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
 import { showSuccessToast } from "../../components/toast/toast";
@@ -42,9 +42,36 @@ const OrderDetailsPage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [disabledButtons, setDisabledButtons] = useState({});
-
+  const location = useLocation();
+  const { selectedDateByCalendar, orderStatus } = location.state || status;
+  
   const navigate = useNavigate();
   const { searchQuery, selectedDate } = useContext(SearchContext);
+
+  useEffect(() => {
+    const orderStatusFromState = location.state?.orderStatus;
+    if (orderStatusFromState) {
+      setStatus(orderStatusFromState)
+
+    }
+  }, [location.state]);
+  
+  const formattedDate = useMemo(() => {
+    if (!selectedDateByCalendar) return null;
+    
+    const date = new Date(selectedDateByCalendar);
+    
+    const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = date.toLocaleDateString("en-US", { month: "short" });
+    const year = date.getFullYear();
+    const time = date.toTimeString().split(" ")[0];
+    const gmt = "GMT";
+    const isoDate = date.toISOString().split("T")[0]; // for "2024-11-05"
+    
+    return `${dayOfWeek}, ${day} ${month} ${year} ${time} ${gmt}`;
+  }, [selectedDateByCalendar]);
+  console.log(selectedDate, formattedDate);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -91,6 +118,13 @@ const OrderDetailsPage = () => {
     };
 
     fetchDataFromApi();
+
+    return () => {
+      setProducts([]);
+      setFilteredData([]);
+      setError(null);
+      setLoading(false);
+    };
   }, []);
 
   const totalOrders = products.length;
@@ -120,6 +154,12 @@ const OrderDetailsPage = () => {
 
     const filteredProducts = products.filter((product) => {
       const statusMatch = status === "All" || product.orderStatus === status;
+      // const orderStatusDashBoard = product.orderStatus === orderStatus;
+// console.log(statusMatch);
+
+// if(orderStatus){
+//   setStatus(orderStatus)
+// }
 
       const orderIdMatch =
         searchQuery === "" || product.orderId.toString().includes(searchQuery);
@@ -129,10 +169,21 @@ const OrderDetailsPage = () => {
         const selectedDateString = new Date(
           selectedDate.$d
         ).toLocaleDateString();
+        
         const productDateString = new Date(
           product.orderDate
         ).toLocaleDateString();
         dateMatch = selectedDateString === productDateString;
+      }
+      else if(formattedDate){
+        const selectedDateStringByCalendar = new Date(
+          selectedDateByCalendar
+        ).toLocaleDateString();
+        
+        const productDateString = new Date(
+          product.orderDate
+        ).toLocaleDateString();
+        dateMatch = selectedDateStringByCalendar === productDateString;
       }
 
       return statusMatch && orderIdMatch && dateMatch;
@@ -140,7 +191,7 @@ const OrderDetailsPage = () => {
 
     setFilteredData(filteredProducts);
     console.log(filteredProducts);
-  }, [status, searchQuery, selectedDate, products]);
+  }, [status, searchQuery, selectedDate, products, formattedDate, orderStatus]);
 
   const handleOrderStatusChange = async (orderId, newStatus) => {
     const result = await Swal.fire({
@@ -259,7 +310,7 @@ const OrderDetailsPage = () => {
       {error && <Typography color="error">{error}</Typography>}
       {!loading && !error && (
         <>
-          <Box
+          {/* <Box
             sx={{
               my: 2,
               textAlign: "center",
@@ -350,7 +401,7 @@ const OrderDetailsPage = () => {
                 </CardContent>
               </Card>
             </Grid>
-          </Grid>
+          </Grid> */}
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <FormControl sx={{ minWidth: 250 }}>

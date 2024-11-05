@@ -100,8 +100,9 @@ const OrderDetailsPage = () => {
 
         const initialDisabledButtons = response.result.reduce((acc, order) => {
           acc[order._id] = {
-            Dispatched: order.orderStatus === "Dispatched",
-            Cancelled: order.orderStatus === "Cancelled",
+            Fullfilled: order.orderStatus === "Fullfilled",
+    Dispatched: order.orderStatus === "Dispatched",
+    Cancelled: order.orderStatus === "Cancelled",
           };
           return acc;
         }, {});
@@ -204,58 +205,54 @@ const OrderDetailsPage = () => {
       confirmButtonText: `Yes, ${newStatus} successfully!`,
       cancelButtonText: "Back",
     });
-
+  
     if (result.isConfirmed) {
       try {
         const orderToUpdate = products.find((order) => order._id === orderId);
         if (orderToUpdate) {
           const updatedOrder = {
             ...orderToUpdate,
-            newStatus: newStatus,
+            orderStatus: newStatus,
           };
-
+  
+          // Temporarily disable all buttons during update process
           setDisabledButtons((prev) => ({
             ...prev,
             [orderId]: {
-              ...prev[orderId],
-              [newStatus]: true,
+              Fullfilled: true,
+              Dispatched: true,
+              Cancelled: true,
             },
           }));
-
-          let response = await updateData(
-            `billing-status/${updatedOrder._id}`,
-            updatedOrder
-          );
-
+  
+          // API call to update order status
+          let response = await updateData(`billing-status/${updatedOrder._id}`, updatedOrder);
+  
           if (response) {
             setProducts((prevProducts) =>
               prevProducts.map((order) =>
-                order._id === updatedOrder._id
-                  ? {
-                      ...order,
-                      orderStatus: newStatus,
-                    }
-                  : order
+                order._id === updatedOrder._id ? { ...order, orderStatus: newStatus } : order
               )
             );
-            showSuccessToast(
-              `Product ${newStatus.toLowerCase()} successfully.`
-            );
-
+            showSuccessToast(`Order ${newStatus.toLowerCase()} successfully.`);
+  
+            // Update the disabled buttons based on the new status
             setDisabledButtons((prev) => ({
               ...prev,
               [orderId]: {
-                Dispatched: newStatus === "Dispatched",
-                Cancelled: newStatus === "Cancelled",
+                Fullfilled: newStatus === "Fullfilled",  // Disable Fullfilled if it’s now Fullfilled
+                Dispatched: newStatus === "Dispatched" || newStatus === "Fullfilled", // Disable Dispatch if it's Dispatched or Fullfilled
+                Cancelled: newStatus === "Cancelled", // Cancelled button is disabled if order is Cancelled
               },
             }));
           }
         }
       } catch (error) {
-        console.error(`Error updating product status to ${newStatus}:`, error);
+        console.error(`Error updating order status to ${newStatus}:`, error);
       }
     }
   };
+  
 
   const copyToClipboard = (orderId) => {
     navigator.clipboard
@@ -472,9 +469,24 @@ const OrderDetailsPage = () => {
                     <TableCell>{order.orderStatus}</TableCell>
                     <TableCell>
                       <Box display="flex" flexDirection="row" flexWrap="nowrap">
+                      <Button
+                          style={{
+                            marginRight: "10px",
+                            backgroundColor: "#00C49F"
+                          }}
+                          variant="contained"
+                          color="primary"
+                          onClick={() =>
+                            handleOrderStatusChange(order._id, "Fullfilled")
+                          }
+                          disabled={disabledButtons[order._id]?.Fullfilled}
+                        >
+                          Fullfilled
+                        </Button>
                         <Button
                           style={{
                             marginRight: "10px",
+                            backgroundColor: "#2196F3"
                           }}
                           variant="contained"
                           color="primary"
@@ -490,6 +502,7 @@ const OrderDetailsPage = () => {
                           color="error"
                           style={{
                             marginRight: "10px",
+                            backgroundColor: "#F44336"
                           }}
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Cancelled")

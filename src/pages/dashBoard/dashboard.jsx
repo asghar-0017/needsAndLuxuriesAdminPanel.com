@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { fetchData } from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
+import { MdAttachMoney } from "react-icons/md";
 import {
   Box,
   Button,
@@ -23,7 +24,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { CheckCircle, Cancel, AccessTime } from "@mui/icons-material";
+import { CheckCircle, Cancel, AccessTime, MonetizationOn } from "@mui/icons-material";
 import FullCalendarComponent from "../../components/calendar/calendar";
 import { format, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -40,13 +41,17 @@ const Dashboard = () => {
   const [cancelledOrders, setCancelledOrders] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showCalendar, setShowCalendar] = useState(false);
-
+  const [totalSales, setTotalSales] = useState();
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
       try {
         const response = await fetchData("billing-details");
+
+        const respons2 = await fetchData("total-sales/fulfilled");
         const products = response.result;
+        setTotalSales(respons2.totalSales);
+        
 
         const total = products.length;
         const pending = products.filter(
@@ -140,95 +145,106 @@ const Dashboard = () => {
                 You have <b>{pendingOrders}</b> pending orders
               </Typography>
             </Box>
-            <Grid container spacing={3} sx={{ mb: 3 }}>
-              <Grid item xs={12} sm={6} md={3}>
-                <Card
-                  sx={{
-                    textAlign: "center",
-                    p: 2,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleCardClick("All")}
-                >
-                  <CardContent>
-                    <AccessTime
-                      sx={{
-                        fontSize: 40,
-                        color: "#3f51b5",
-                      }}
-                    />
-                    <Typography variant="h6">Total Orders</Typography>
-                    <Typography variant="h4">{totalOrders}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Card
-                  sx={{
-                    textAlign: "center",
-                    p: 2,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleCardClick("Pending")}
-                >
-                  <CardContent>
-                    <AccessTime
-                      sx={{
-                        fontSize: 40,
-                        color: "yellow",
-                      }}
-                    />
-                    <Typography variant="h6">Pending Orders</Typography>
-                    <Typography variant="h4">{pendingOrders}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Card
-                  sx={{
-                    textAlign: "center",
-                    p: 2,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleCardClick("Dispatched")}
-                >
-                  <CardContent>
-                    <CheckCircle
-                      sx={{
-                        fontSize: 40,
-                        color: "#4caf50",
-                      }}
-                    />
-                    <Typography variant="h6">Dispatched Orders</Typography>
-                    <Typography variant="h4">{dispatchedOrders}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Card
-                  sx={{
-                    textAlign: "center",
-                    p: 2,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleCardClick("Cancelled")}
-                >
-                  <CardContent>
-                    <Cancel
-                      sx={{
-                        fontSize: 40,
-                        color: "red",
-                      }}
-                    />
-                    <Typography variant="h6">Cancelled Orders</Typography>
-                    <Typography variant="h4">{cancelledOrders}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
-            </Grid>
+            <Grid container spacing={2} sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
+  <Grid item xs={12} sm={6} md={2.4}>
+    <Card
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        p: 1,
+        backgroundColor: "#e0f7fa",
+        cursor: "pointer",
+        height: '100px', 
+      }}
+      // onClick={() => handleCardClick("TotalSales")}
+    >
+      <MdAttachMoney style={{ fontSize: 50, color: "white", marginRight: 10 }} />
+      <CardContent >
+        <Typography variant="body2" color="text.secondary">Total Sales</Typography>
+        <Typography variant="h6" color="text.primary">{totalSales}</Typography>
+      </CardContent>
+    </Card>
+  </Grid>
+  <Grid item xs={12} sm={6} md={2.4}>
+    <Card
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        p: 1,
+        backgroundColor: "#f3e5f5",
+        cursor: "pointer",
+        height: '100px', // Adjust height to create smaller cards
+      }}
+      onClick={() => handleCardClick("All")}
+    >
+      <AccessTime style={{ fontSize: 50, color: "white", marginRight: 10 }} />
+      <CardContent >
+        <Typography variant="body2" color="text.secondary">Total Orders</Typography>
+        <Typography variant="h6" color="text.primary">{totalOrders}</Typography>
+      </CardContent>
+    </Card>
+  </Grid>
+  <Grid item xs={12} sm={6} md={2.4}>
+    <Card
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        p: 1,
+        backgroundColor: "#fff9c4",
+        cursor: "pointer",
+        height: '100px', // Adjust height to create smaller cards
+      }}
+      onClick={() => handleCardClick("Pending")}
+    >
+      <AccessTime style={{ fontSize: 50, color: "white", marginRight: 10 }} />
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">Pending Orders</Typography>
+        <Typography variant="h6" color="text.primary">{pendingOrders}</Typography>
+      </CardContent>
+    </Card>
+  </Grid>
+  <Grid item xs={12} sm={6} md={2.4}>
+    <Card
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        p: 1,
+        backgroundColor: "#e8f5e9",
+        cursor: "pointer",
+        height: '100px', // Adjust height to create smaller cards
+      }}
+      onClick={() => handleCardClick("Dispatched")}
+    >
+      <CheckCircle style={{ fontSize: 50, color: "white", marginRight: 10 }} />
+      <CardContent >
+        <Typography variant="body2" color="text.secondary">Dispatched Orders</Typography>
+        <Typography variant="h6" color="text.primary">{dispatchedOrders}</Typography>
+      </CardContent>
+    </Card>
+  </Grid>
+  <Grid item xs={12} sm={6} md={2.4}>
+    <Card
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        p: 1,
+        backgroundColor: "#ffebee",
+        cursor: "pointer",
+        height: '100px', // Adjust height to create smaller cards
+      }}
+      onClick={() => handleCardClick("Cancelled")}
+    >
+      <Cancel style={{ fontSize: 50, color: "white", marginRight: 10 }} />
+      <CardContent >
+        <Typography variant="body2" color="text.secondary">Cancelled Orders</Typography>
+        <Typography variant="h6" color="text.primary">{cancelledOrders}</Typography>
+      </CardContent>
+    </Card>
+  </Grid>
+  <Grid item xs={12}>
+    <Divider />
+  </Grid>
+</Grid>
 
             <Grid container spacing={5}>
               <Grid item xs={12} md={7}>

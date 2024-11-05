@@ -467,7 +467,6 @@ const OrderDetailPage = () => {
                   )}
                   
                   
-                      {/* Additional Measurements */}
                       <Divider sx={{ my: 2 }} />
                       <Typography variant="h5">Additional Information</Typography>
                       <Grid container spacing={2}>

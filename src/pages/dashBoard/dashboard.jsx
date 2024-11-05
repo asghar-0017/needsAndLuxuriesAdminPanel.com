@@ -15,6 +15,7 @@ import {
 import { fetchData } from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
 import { MdAttachMoney } from "react-icons/md";
+import { FaMoneyBillWave } from "react-icons/fa";
 import {
   Box,
   Button,
@@ -158,7 +159,7 @@ const Dashboard = () => {
       }}
       // onClick={() => handleCardClick("TotalSales")}
     >
-      <MdAttachMoney style={{ fontSize: 50, color: "white", marginRight: 10 }} />
+      <FaMoneyBillWave style={{ fontSize: 50, color: "white", marginRight: 10 }} />
       <CardContent >
         <Typography variant="body2" color="text.secondary">Total Sales</Typography>
         <Typography variant="h6" color="text.primary">{totalSales}</Typography>

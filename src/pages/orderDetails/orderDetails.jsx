@@ -40,6 +40,7 @@ const OrderDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState("All");
+  const [fullFillment, setFullFillment] = useState("All");
   const [tooltipText, setTooltipText] = useState("Copy order ID");
   const [products, setProducts] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -53,6 +54,7 @@ const OrderDetailsPage = () => {
     const orderStatusFromState = location.state?.orderStatus;
     if (orderStatusFromState) {
       setStatus(orderStatusFromState);
+      setFullFillment(orderStatusFromState)
     }
   }, [location.state]);
 
@@ -127,6 +129,10 @@ const OrderDetailsPage = () => {
     setStatus(event.target.value);
   };
 
+  const handleFullFillmentChange = (event) => {
+    setFullFillment(event.target.value);
+  };
+
   useEffect(() => {
     if (products.length === 0) {
       setFilteredData([]);
@@ -136,6 +142,11 @@ const OrderDetailsPage = () => {
     const filteredProducts = products.filter((product) => {
       const statusMatch = status === "All" || product.orderStatus === status;
 
+      const fullfillMatch =
+      fullFillment === "All" ||
+      (fullFillment === "Fullfilled" && product.orderStatus === "Fullfilled") ||
+      (fullFillment === "UnFullfilled" && product.orderStatus !== "Fullfilled");
+      
       const orderIdMatch =
         searchQuery === "" || product.orderId.toString().includes(searchQuery);
 
@@ -160,12 +171,12 @@ const OrderDetailsPage = () => {
         dateMatch = selectedDateStringByCalendar === productDateString;
       }
 
-      return statusMatch && orderIdMatch && dateMatch;
+      return statusMatch && orderIdMatch && dateMatch && fullfillMatch;
     });
 
     setFilteredData(filteredProducts);
     console.log(filteredProducts);
-  }, [status, searchQuery, selectedDate, products, formattedDate, orderStatus]);
+  }, [status, searchQuery, selectedDate, products, formattedDate, orderStatus, fullFillment]);
 
   const handleOrderStatusChange = async (orderId, newStatus) => {
     const result = await Swal.fire({
@@ -276,13 +287,13 @@ const OrderDetailsPage = () => {
       case "Fullfilled":
         return "#4caf50";
       case "Pending":
-        return "#ff9800"; 
+        return "#ff9800";
       case "Cancelled":
         return "#f44336";
       case "Dispatched":
         return "#2196f3";
       default:
-        return "#9e9e9e"; 
+        return "#9e9e9e";
     }
   };
 
@@ -305,7 +316,21 @@ const OrderDetailsPage = () => {
                   <MenuItem value="Pending">Pending</MenuItem>
                   <MenuItem value="Dispatched">Dispatched</MenuItem>
                   <MenuItem value="Cancelled">Cancelled</MenuItem>
-                  <MenuItem value="Fullfilled">Fullfilled</MenuItem>
+                  {/* <MenuItem value="Fullfilled">Fullfilled</MenuItem> */}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <FormControl sx={{ minWidth: 250 }}>
+                <InputLabel>Fullfillment</InputLabel>
+                <Select
+                  value={fullFillment}
+                  onChange={handleFullFillmentChange}
+                  label="Fullfilled"
+                >
+                  <MenuItem value="All">All</MenuItem>
+                  <MenuItem value="Fullfilled">FullFilled</MenuItem>
+                  <MenuItem value="UnFullfilled">UnFullfilled</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -376,20 +401,27 @@ const OrderDetailsPage = () => {
 
                     <TableCell>
                       <Box display="flex" flexDirection="row" flexWrap="nowrap">
-                      <Button
-  style={{
-    marginRight: "10px",
-    backgroundColor: "#00C49F",
-  }}
-  variant="contained"
-  color="primary"
-  onClick={() =>
-    handleOrderStatusChange(order._id, order.orderStatus === "Fullfilled" ? "Unfullfilled" : "Fullfilled")
-  }
-  disabled={disabledButtons[order._id]?.Fullfilled}
->
-  {order.orderStatus === "Fullfilled" ? "Fullfilled" : "Unfullfilled"}
-</Button>
+                        <Button
+                          style={{
+                            marginRight: "10px",
+                            backgroundColor: "#00C49F",
+                          }}
+                          variant="contained"
+                          color="primary"
+                          onClick={() =>
+                            handleOrderStatusChange(
+                              order._id,
+                              order.orderStatus === "Fullfilled"
+                                ? "Unfullfilled"
+                                : "Fullfilled"
+                            )
+                          }
+                          disabled={disabledButtons[order._id]?.Fullfilled}
+                        >
+                          {order.orderStatus === "Fullfilled"
+                            ? "Fullfilled"
+                            : "Unfullfilled"}
+                        </Button>
 
                         <Button
                           style={{
@@ -401,7 +433,7 @@ const OrderDetailsPage = () => {
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Dispatched")
                           }
-                          disabled={disabledButtons[order._id]?.Dispatched}
+                          disabled={disabledButtons[order._id]?.Dispatched || disabledButtons[order._id]?.Fullfilled}
                         >
                           Dispatch
                         </Button>

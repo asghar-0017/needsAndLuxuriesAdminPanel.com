@@ -53,6 +53,7 @@ const OrderDetailsPage = () => {
 
   useEffect(() => {
     const orderStatusFromState = location.state?.orderStatus;
+
     if (orderStatusFromState) {
       setStatus(orderStatusFromState);
       setFullFillment(orderStatusFromState);
@@ -152,11 +153,20 @@ const OrderDetailsPage = () => {
   }, [selectedDateByCalendar]);
 
   const handleStatusChange = (event) => {
-    setStatus(event.target.value);
+    const newStatus = event.target.value;
+    setStatus(newStatus || "All");
   };
 
   const handleFullFillmentChange = (event) => {
-    setFullFillment(event.target.value);
+    const newFullFillment = event.target.value;
+
+    // Ensure that only valid options are passed to the state
+    const validValues = ["All", "Fullfilled", "UnFullfilled"];
+    if (validValues.includes(newFullFillment)) {
+      setFullFillment(newFullFillment);
+    } else {
+      setFullFillment("All"); // Default to 'All' if the value is invalid
+    }
   };
 
   useEffect(() => {
@@ -173,7 +183,10 @@ const OrderDetailsPage = () => {
         (fullFillment === "Fullfilled" &&
           product.orderStatus === "Fullfilled") ||
         (fullFillment === "UnFullfilled" &&
-          product.orderStatus !== "Fullfilled");
+          product.orderStatus !== "Fullfilled") ||
+        (fullFillment !== "All" &&
+          fullFillment !== "Fullfilled" &&
+          fullFillment !== "UnFullfilled");
 
       const orderIdMatch =
         searchQuery === "" || product.orderId.toString().includes(searchQuery);
@@ -201,9 +214,8 @@ const OrderDetailsPage = () => {
 
       return statusMatch && orderIdMatch && dateMatch && fullfillMatch;
     });
-
     setFilteredData(filteredProducts);
-    console.log(filteredProducts);
+    // console.log(filteredProducts);
   }, [
     status,
     searchQuery,
@@ -473,7 +485,7 @@ const OrderDetailsPage = () => {
                           style={{
                             marginRight: "10px",
                             backgroundColor: "#00C49F",
-                            width: "120px"
+                            width: "120px",
                           }}
                           variant="contained"
                           color="primary"

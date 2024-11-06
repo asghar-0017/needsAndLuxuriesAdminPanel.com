@@ -52,7 +52,7 @@ const Dashboard = () => {
         setTotalSales(respons2.totalSales);
 
         const currentDate = new Date();
-        const currentMonth = currentDate.getMonth(); // 0-11 (0 = January, 11 = December)
+        const currentMonth = currentDate.getMonth(); 
         const currentYear = currentDate.getFullYear();
 
         const filteredOrders = products.filter((order) => {
@@ -87,6 +87,7 @@ const Dashboard = () => {
           { name: "Pending", value: pending },
           { name: "Dispatched", value: dispatched },
           { name: "Cancelled", value: cancelled },
+          { name: "FullFilled", value: fullfilled }
         ];
 
         setBarChartData(formattedData);
@@ -309,7 +310,7 @@ const Dashboard = () => {
                 </ResponsiveContainer>
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={5}>
                 <Typography variant="h6" align="center" gutterBottom>
                   Orders Status
                 </Typography>

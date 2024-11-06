@@ -159,13 +159,11 @@ const OrderDetailsPage = () => {
 
   const handleFullFillmentChange = (event) => {
     const newFullFillment = event.target.value;
-
-    // Ensure that only valid options are passed to the state
     const validValues = ["All", "Fullfilled", "UnFullfilled"];
     if (validValues.includes(newFullFillment)) {
       setFullFillment(newFullFillment);
     } else {
-      setFullFillment("All"); // Default to 'All' if the value is invalid
+      setFullFillment("All"); 
     }
   };
 

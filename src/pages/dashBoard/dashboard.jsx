@@ -84,22 +84,33 @@ const Dashboard = () => {
 
         setBarChartData(formattedData);
 
-        const dailyData = products.reduce((acc, order) => {
-          const orderDate = parseISO(order.orderDate);
-        
-          if (isValid(orderDate)) {
-            const dayOfMonth = format(orderDate, "d");  
-            acc[dayOfMonth] = (acc[dayOfMonth] || 0) + 1;
-          } else {
-            console.warn(`Invalid date format: ${order.orderDate}`);
-          }
-          return acc;
-        }, {});
-        
+        const dailyData = products.reduce(
+          (acc, order) => {
+            const orderDate = parseISO(order.orderDate);
+            
+            if (isValid(orderDate)) {
+              const dayOfMonth = format(orderDate, "d");
+  
+              // Count the total number of orders per day
+              acc.orders[dayOfMonth] = (acc.orders[dayOfMonth] || 0) + 1;
+  
+              // Only count 'Fullfilled' orders for sales
+              if (order.orderStatus === "Fullfilled") {
+                acc.sales[dayOfMonth] = (acc.sales[dayOfMonth] || 0) + 1; // Increment by 1 for each fulfilled order
+              }
+            } else {
+              console.warn(`Invalid date format: ${order.orderDate}`);
+            }
+            return acc;
+          },
+          { orders: {}, sales: {} }
+        );
+  
         const daysInMonth = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
         const dailyOrderArray = daysInMonth.map((day) => ({
           name: `Day ${day}`,
-          value: dailyData[day] || 0,
+          orders: dailyData.orders[day] || 0,
+          sales: dailyData.sales[day] || 0, 
         }));
         
         setDailyOrderData(dailyOrderArray);        
@@ -263,28 +274,15 @@ const Dashboard = () => {
                   Orders by Day
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart
-                    data={dailyOrderData}
-                    margin={{
-                      top: 10,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    {/* <Legend /> */}
-                    <Line
-                      type="monotone"
-                      dataKey="value"
-                      stroke="#82ca9d"
-                      fill="#82ca9d"
-                      connectNulls
-                    />
-                  </LineChart>
+                <LineChart data={dailyOrderData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
+  <CartesianGrid strokeDasharray="3 3" />
+  <XAxis dataKey="name" />
+  <YAxis />
+  <Tooltip />
+  <Line type="monotone" dataKey="orders" stroke="#8884d8" fill="#8884d8" />
+  <Line type="monotone" dataKey="sales" stroke="#82ca9d" fill="#82ca9d" connectNulls />
+</LineChart>
+
                 </ResponsiveContainer>
               </Grid>
 

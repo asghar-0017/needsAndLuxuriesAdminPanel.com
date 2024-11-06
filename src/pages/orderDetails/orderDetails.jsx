@@ -23,7 +23,11 @@ import {
 } from "@mui/material";
 import { AccessTime, CheckCircle, Cancel } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { deleteDataById, fetchData, updateData } from "../../config/apiServices/apiServices";
+import {
+  deleteDataById,
+  fetchData,
+  updateData,
+} from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
 import { showSuccessToast } from "../../components/toast/toast";
 import Swal from "sweetalert2";
@@ -44,34 +48,31 @@ const OrderDetailsPage = () => {
   const [disabledButtons, setDisabledButtons] = useState({});
   const location = useLocation();
   const { selectedDateByCalendar, orderStatus } = location.state || status;
-  
+
   const navigate = useNavigate();
   const { searchQuery, selectedDate } = useContext(SearchContext);
 
   useEffect(() => {
     const orderStatusFromState = location.state?.orderStatus;
     if (orderStatusFromState) {
-      setStatus(orderStatusFromState)
-
+      setStatus(orderStatusFromState);
     }
   }, [location.state]);
-  
+
   const formattedDate = useMemo(() => {
     if (!selectedDateByCalendar) return null;
-    
+
     const date = new Date(selectedDateByCalendar);
-    
+
     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
     const day = String(date.getDate()).padStart(2, "0");
     const month = date.toLocaleDateString("en-US", { month: "short" });
     const year = date.getFullYear();
     const time = date.toTimeString().split(" ")[0];
     const gmt = "GMT";
-    const isoDate = date.toISOString().split("T")[0]; // for "2024-11-05"
-    
+
     return `${dayOfWeek}, ${day} ${month} ${year} ${time} ${gmt}`;
   }, [selectedDateByCalendar]);
-  console.log(selectedDate, formattedDate);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -101,8 +102,8 @@ const OrderDetailsPage = () => {
         const initialDisabledButtons = response.result.reduce((acc, order) => {
           acc[order._id] = {
             Fullfilled: order.orderStatus === "Fullfilled",
-    Dispatched: order.orderStatus === "Dispatched",
-    Cancelled: order.orderStatus === "Cancelled",
+            Dispatched: order.orderStatus === "Dispatched",
+            Cancelled: order.orderStatus === "Cancelled",
           };
           return acc;
         }, {});
@@ -139,10 +140,6 @@ const OrderDetailsPage = () => {
     (order) => order.orderStatus === "Cancelled"
   ).length;
 
-  const handleOrderClick = (orderId) => {
-    navigate(`/order/${orderId}`);
-  };
-
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
   };
@@ -155,12 +152,6 @@ const OrderDetailsPage = () => {
 
     const filteredProducts = products.filter((product) => {
       const statusMatch = status === "All" || product.orderStatus === status;
-      // const orderStatusDashBoard = product.orderStatus === orderStatus;
-// console.log(statusMatch);
-
-// if(orderStatus){
-//   setStatus(orderStatus)
-// }
 
       const orderIdMatch =
         searchQuery === "" || product.orderId.toString().includes(searchQuery);
@@ -170,17 +161,16 @@ const OrderDetailsPage = () => {
         const selectedDateString = new Date(
           selectedDate.$d
         ).toLocaleDateString();
-        
+
         const productDateString = new Date(
           product.orderDate
         ).toLocaleDateString();
         dateMatch = selectedDateString === productDateString;
-      }
-      else if(formattedDate){
+      } else if (formattedDate) {
         const selectedDateStringByCalendar = new Date(
           selectedDateByCalendar
         ).toLocaleDateString();
-        
+
         const productDateString = new Date(
           product.orderDate
         ).toLocaleDateString();
@@ -205,7 +195,7 @@ const OrderDetailsPage = () => {
       confirmButtonText: `Yes, ${newStatus} successfully!`,
       cancelButtonText: "Back",
     });
-  
+
     if (result.isConfirmed) {
       try {
         const orderToUpdate = products.find((order) => order._id === orderId);
@@ -214,8 +204,7 @@ const OrderDetailsPage = () => {
             ...orderToUpdate,
             orderStatus: newStatus,
           };
-  
-          // Temporarily disable all buttons during update process
+
           setDisabledButtons((prev) => ({
             ...prev,
             [orderId]: {
@@ -224,25 +213,29 @@ const OrderDetailsPage = () => {
               Cancelled: true,
             },
           }));
-  
-          // API call to update order status
-          let response = await updateData(`billing-status/${updatedOrder._id}`, updatedOrder);
-  
+
+          let response = await updateData(
+            `billing-status/${updatedOrder._id}`,
+            updatedOrder
+          );
+
           if (response) {
             setProducts((prevProducts) =>
               prevProducts.map((order) =>
-                order._id === updatedOrder._id ? { ...order, orderStatus: newStatus } : order
+                order._id === updatedOrder._id
+                  ? { ...order, orderStatus: newStatus }
+                  : order
               )
             );
             showSuccessToast(`Order ${newStatus.toLowerCase()} successfully.`);
-  
-            // Update the disabled buttons based on the new status
+
             setDisabledButtons((prev) => ({
               ...prev,
               [orderId]: {
-                Fullfilled: newStatus === "Fullfilled",  // Disable Fullfilled if it’s now Fullfilled
-                Dispatched: newStatus === "Dispatched" || newStatus === "Fullfilled", // Disable Dispatch if it's Dispatched or Fullfilled
-                Cancelled: newStatus === "Cancelled", // Cancelled button is disabled if order is Cancelled
+                Fullfilled: newStatus === "Fullfilled", 
+                Dispatched:
+                  newStatus === "Dispatched" || newStatus === "Fullfilled", 
+                Cancelled: newStatus === "Cancelled",
               },
             }));
           }
@@ -252,7 +245,6 @@ const OrderDetailsPage = () => {
       }
     }
   };
-  
 
   const copyToClipboard = (orderId) => {
     navigator.clipboard
@@ -281,10 +273,7 @@ const OrderDetailsPage = () => {
     });
     if (result.isConfirmed) {
       try {
-        let response = await deleteDataById(
-          "billing-details",
-          id
-        );
+        let response = await deleteDataById("billing-details", id);
         setProducts((prevProducts) =>
           prevProducts.filter((order) => order.orderId !== id)
         );
@@ -292,9 +281,7 @@ const OrderDetailsPage = () => {
         setFilteredData((prevFilteredData) =>
           prevFilteredData.filter((order) => order.orderId !== id)
         );
-        showSuccessToast(
-          "Order deleted successfully."
-        );        
+        showSuccessToast("Order deleted successfully.");
       } catch (error) {
         console.error(`Error deleting`, error);
       }
@@ -307,98 +294,6 @@ const OrderDetailsPage = () => {
       {error && <Typography color="error">{error}</Typography>}
       {!loading && !error && (
         <>
-          {/* <Box
-            sx={{
-              my: 2,
-              textAlign: "center",
-              bgcolor: "#fff3cd",
-              p: 1,
-              borderRadius: 2,
-            }}
-          >
-            <Typography variant="body1" color="textSecondary">
-              You have {pendingOrders} pending orders
-            </Typography>
-          </Box>
-
-          <Grid container spacing={3} sx={{ mb: 3 }}>
-            <Grid item xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  textAlign: "center",
-                  p: 2,
-                }}
-              >
-                <CardContent>
-                  <AccessTime
-                    sx={{
-                      fontSize: 40,
-                      color: "#3f51b5",
-                    }}
-                  />
-                  <Typography variant="h6">Total Orders</Typography>
-                  <Typography variant="h4">{totalOrders}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  textAlign: "center",
-                  p: 2,
-                }}
-              >
-                <CardContent>
-                  <AccessTime
-                    sx={{
-                      fontSize: 40,
-                      color: "yellow",
-                    }}
-                  />
-                  <Typography variant="h6">Pending Orders</Typography>
-                  <Typography variant="h4">{pendingOrders}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  textAlign: "center",
-                  p: 2,
-                }}
-              >
-                <CardContent>
-                  <CheckCircle
-                    sx={{
-                      fontSize: 40,
-                      color: "#4caf50",
-                    }}
-                  />
-                  <Typography variant="h6">Dispatched Orders</Typography>
-                  <Typography variant="h4">{dispatchedOrders}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  textAlign: "center",
-                  p: 2,
-                }}
-              >
-                <CardContent>
-                  <Cancel
-                    sx={{
-                      fontSize: 40,
-                      color: "red",
-                    }}
-                  />
-                  <Typography variant="h6">Cancelled Orders</Typography>
-                  <Typography variant="h4">{cancelledOrders}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid> */}
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <FormControl sx={{ minWidth: 250 }}>
@@ -412,6 +307,7 @@ const OrderDetailsPage = () => {
                   <MenuItem value="Pending">Pending</MenuItem>
                   <MenuItem value="Dispatched">Dispatched</MenuItem>
                   <MenuItem value="Cancelled">Cancelled</MenuItem>
+                  <MenuItem value="Fullfilled">Fullfilled</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -469,10 +365,10 @@ const OrderDetailsPage = () => {
                     <TableCell>{order.orderStatus}</TableCell>
                     <TableCell>
                       <Box display="flex" flexDirection="row" flexWrap="nowrap">
-                      <Button
+                        <Button
                           style={{
                             marginRight: "10px",
-                            backgroundColor: "#00C49F"
+                            backgroundColor: "#00C49F",
                           }}
                           variant="contained"
                           color="primary"
@@ -486,7 +382,7 @@ const OrderDetailsPage = () => {
                         <Button
                           style={{
                             marginRight: "10px",
-                            backgroundColor: "#2196F3"
+                            backgroundColor: "#2196F3",
                           }}
                           variant="contained"
                           color="primary"
@@ -502,7 +398,7 @@ const OrderDetailsPage = () => {
                           color="error"
                           style={{
                             marginRight: "10px",
-                            backgroundColor: "#F44336"
+                            backgroundColor: "#F44336",
                           }}
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Cancelled")
@@ -517,12 +413,12 @@ const OrderDetailsPage = () => {
                             justifyContent: "center",
                             alignItems: "center",
                           }}
-                          onClick={()=>handleDelete(order.orderId)}
+                          onClick={() => handleDelete(order.orderId)}
                         >
                           <DeleteIcon
                             sx={{
                               color: "red",
-                              cursor: "pointer"
+                              cursor: "pointer",
                             }}
                           />
                         </Box>

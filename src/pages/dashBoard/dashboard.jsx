@@ -23,11 +23,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import {
-  CheckCircle,
-  Cancel,
-  AccessTime,
-} from "@mui/icons-material";
+import { CheckCircle, Cancel, AccessTime } from "@mui/icons-material";
 import FullCalendarComponent from "../../components/calendar/calendar";
 import { format, isValid, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -54,6 +50,17 @@ const Dashboard = () => {
         const respons2 = await fetchData("total-sales/fulfilled");
         const products = response.result;
         setTotalSales(respons2.totalSales);
+
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth(); // 0-11 (0 = January, 11 = December)
+        const currentYear = currentDate.getFullYear();
+
+        const filteredOrders = products.filter((order) => {
+          const orderDate = parseISO(order.orderDate);
+          const orderMonth = orderDate.getMonth();
+          const orderYear = orderDate.getFullYear();
+          return orderMonth === currentMonth && orderYear === currentYear;
+        });
 
         const total = products.length;
         const pending = products.filter(
@@ -84,19 +91,15 @@ const Dashboard = () => {
 
         setBarChartData(formattedData);
 
-        const dailyData = products.reduce(
+        const dailyData = filteredOrders.reduce(
           (acc, order) => {
             const orderDate = parseISO(order.orderDate);
-            
+
             if (isValid(orderDate)) {
               const dayOfMonth = format(orderDate, "d");
-  
-              // Count the total number of orders per day
               acc.orders[dayOfMonth] = (acc.orders[dayOfMonth] || 0) + 1;
-  
-              // Only count 'Fullfilled' orders for sales
               if (order.orderStatus === "Fullfilled") {
-                acc.sales[dayOfMonth] = (acc.sales[dayOfMonth] || 0) + 1; // Increment by 1 for each fulfilled order
+                acc.sales[dayOfMonth] = (acc.sales[dayOfMonth] || 0) + 1; 
               }
             } else {
               console.warn(`Invalid date format: ${order.orderDate}`);
@@ -105,15 +108,17 @@ const Dashboard = () => {
           },
           { orders: {}, sales: {} }
         );
-  
-        const daysInMonth = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+
+        const daysInMonth = Array.from({ length: 31 }, (_, i) =>
+          (i + 1).toString()
+        );
         const dailyOrderArray = daysInMonth.map((day) => ({
           name: `Day ${day}`,
           orders: dailyData.orders[day] || 0,
-          sales: dailyData.sales[day] || 0, 
+          sales: dailyData.sales[day] || 0,
         }));
-        
-        setDailyOrderData(dailyOrderArray);        
+
+        setDailyOrderData(dailyOrderArray);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -172,7 +177,12 @@ const Dashboard = () => {
                   color: "#a5d6a7",
                   icon: (
                     <FaRupeeSign
-                      style={{ fontSize: 40, color: "white", marginRight: 10, marginLeft: 10 }}
+                      style={{
+                        fontSize: 40,
+                        color: "white",
+                        marginRight: 10,
+                        marginLeft: 10,
+                      }}
                     />
                   ),
                   // onClick: () => handleCardClick("TotalSales"),
@@ -274,15 +284,28 @@ const Dashboard = () => {
                   Orders by Day
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={dailyOrderData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
-  <CartesianGrid strokeDasharray="3 3" />
-  <XAxis dataKey="name" />
-  <YAxis />
-  <Tooltip />
-  <Line type="monotone" dataKey="orders" stroke="#8884d8" fill="#8884d8" />
-  <Line type="monotone" dataKey="sales" stroke="#82ca9d" fill="#82ca9d" connectNulls />
-</LineChart>
-
+                  <LineChart
+                    data={dailyOrderData}
+                    margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line
+                      type="monotone"
+                      dataKey="orders"
+                      stroke="#8884d8"
+                      fill="#8884d8"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="sales"
+                      stroke="#82ca9d"
+                      fill="#82ca9d"
+                      connectNulls
+                    />
+                  </LineChart>
                 </ResponsiveContainer>
               </Grid>
 

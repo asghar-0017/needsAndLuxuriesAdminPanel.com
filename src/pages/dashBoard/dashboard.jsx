@@ -282,7 +282,7 @@ const Dashboard = () => {
             <Grid container spacing={5}>
               <Grid item xs={12} md={7}>
                 <Typography variant="h6" align="center" gutterBottom>
-                  Orders by Day
+                Orders and Sales by Day
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart

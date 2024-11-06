@@ -376,20 +376,21 @@ const OrderDetailsPage = () => {
 
                     <TableCell>
                       <Box display="flex" flexDirection="row" flexWrap="nowrap">
-                        <Button
-                          style={{
-                            marginRight: "10px",
-                            backgroundColor: "#00C49F",
-                          }}
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            handleOrderStatusChange(order._id, "Fullfilled")
-                          }
-                          disabled={disabledButtons[order._id]?.Fullfilled}
-                        >
-                          Fullfilled
-                        </Button>
+                      <Button
+  style={{
+    marginRight: "10px",
+    backgroundColor: "#00C49F",
+  }}
+  variant="contained"
+  color="primary"
+  onClick={() =>
+    handleOrderStatusChange(order._id, order.orderStatus === "Fullfilled" ? "Unfullfilled" : "Fullfilled")
+  }
+  disabled={disabledButtons[order._id]?.Fullfilled}
+>
+  {order.orderStatus === "Fullfilled" ? "Fullfilled" : "Unfullfilled"}
+</Button>
+
                         <Button
                           style={{
                             marginRight: "10px",

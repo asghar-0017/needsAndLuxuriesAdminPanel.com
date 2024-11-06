@@ -157,7 +157,7 @@ const Dashboard = () => {
               {[
                 {
                   label: "Total Sales",
-                  value: totalSales,
+                  value: totalSales.toFixed(2),
                   color: "#a5d6a7",
                   icon: (
                     <FaRupeeSign

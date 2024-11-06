@@ -25,7 +25,7 @@ const FullCalendarComponent = ({ orders }) => {
 
   const handleEventClick = (clickInfo) => {
     const selectedDateByCalendar = clickInfo.event.extendedProps.orderDate;
-    navigate("/order-details", { state: { selectedDateByCalendar } });
+    navigate("/order-details", { state: { selectedDateByCalendar, fromDashboard: true } });
   };
 
   return (

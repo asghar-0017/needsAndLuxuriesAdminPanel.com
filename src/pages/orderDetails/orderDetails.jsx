@@ -42,6 +42,7 @@ const OrderDetailsPage = () => {
   const [status, setStatus] = useState("All");
   const [fullFillment, setFullFillment] = useState("All");
   const [tooltipText, setTooltipText] = useState("Copy order ID");
+  const [sales, setSales] = useState("");
   const [products, setProducts] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [disabledButtons, setDisabledButtons] = useState({});
@@ -54,7 +55,7 @@ const OrderDetailsPage = () => {
     const orderStatusFromState = location.state?.orderStatus;
     if (orderStatusFromState) {
       setStatus(orderStatusFromState);
-      setFullFillment(orderStatusFromState)
+      setFullFillment(orderStatusFromState);
     }
   }, [location.state]);
 
@@ -125,6 +126,31 @@ const OrderDetailsPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchDataFromApi = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchData(
+          `total-sales-of-date/${formattedDate}`
+        );
+        setSales(response.sales);
+      } catch (error) {
+        setError(error.message);
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDataFromApi();
+
+    return () => {
+      setSales("");
+      setError(null);
+      setLoading(false);
+    };
+  }, [selectedDateByCalendar]);
+
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
   };
@@ -143,10 +169,12 @@ const OrderDetailsPage = () => {
       const statusMatch = status === "All" || product.orderStatus === status;
 
       const fullfillMatch =
-      fullFillment === "All" ||
-      (fullFillment === "Fullfilled" && product.orderStatus === "Fullfilled") ||
-      (fullFillment === "UnFullfilled" && product.orderStatus !== "Fullfilled");
-      
+        fullFillment === "All" ||
+        (fullFillment === "Fullfilled" &&
+          product.orderStatus === "Fullfilled") ||
+        (fullFillment === "UnFullfilled" &&
+          product.orderStatus !== "Fullfilled");
+
       const orderIdMatch =
         searchQuery === "" || product.orderId.toString().includes(searchQuery);
 
@@ -176,7 +204,15 @@ const OrderDetailsPage = () => {
 
     setFilteredData(filteredProducts);
     console.log(filteredProducts);
-  }, [status, searchQuery, selectedDate, products, formattedDate, orderStatus, fullFillment]);
+  }, [
+    status,
+    searchQuery,
+    selectedDate,
+    products,
+    formattedDate,
+    orderStatus,
+    fullFillment,
+  ]);
 
   const handleOrderStatusChange = async (orderId, newStatus) => {
     const result = await Swal.fire({
@@ -316,7 +352,6 @@ const OrderDetailsPage = () => {
                   <MenuItem value="Pending">Pending</MenuItem>
                   <MenuItem value="Dispatched">Dispatched</MenuItem>
                   <MenuItem value="Cancelled">Cancelled</MenuItem>
-                  {/* <MenuItem value="Fullfilled">Fullfilled</MenuItem> */}
                 </Select>
               </FormControl>
             </Grid>
@@ -336,6 +371,39 @@ const OrderDetailsPage = () => {
             </Grid>
             <Grid item>
               <DatePickerComp />
+            </Grid>
+            <Grid
+              item
+              sx={{ flexGrow: 1, display: "flex", justifyContent: "flex-end" }}
+            >
+              {location?.state?.fromDashboard && (
+                <Box
+                  sx={{
+                    padding: 1,
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    borderRadius: 1,
+                    backgroundColor: "#f1f1f1",
+                    boxShadow: 2,
+                    minWidth: 250,
+                    textAlign: "center",
+                    width: "auto",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Total Sales
+                  </Typography>
+                  <Typography variant="h6" component="div" color="primary">
+                    PKR {sales.toFixed(2)}
+                  </Typography>
+                </Box>
+              )}
             </Grid>
           </Grid>
 
@@ -433,7 +501,10 @@ const OrderDetailsPage = () => {
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Dispatched")
                           }
-                          disabled={disabledButtons[order._id]?.Dispatched || disabledButtons[order._id]?.Fullfilled}
+                          disabled={
+                            disabledButtons[order._id]?.Dispatched ||
+                            disabledButtons[order._id]?.Fullfilled
+                          }
                         >
                           Dispatch
                         </Button>

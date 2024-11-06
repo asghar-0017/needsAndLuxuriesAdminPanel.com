@@ -473,6 +473,7 @@ const OrderDetailsPage = () => {
                           style={{
                             marginRight: "10px",
                             backgroundColor: "#00C49F",
+                            width: "120px"
                           }}
                           variant="contained"
                           color="primary"

@@ -174,7 +174,7 @@ const Dashboard = () => {
         p: 1,
         backgroundColor: "#f3e5f5",
         cursor: "pointer",
-        height: '100px', // Adjust height to create smaller cards
+        height: '100px',
       }}
       onClick={() => handleCardClick("All")}
     >

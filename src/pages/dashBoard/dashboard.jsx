@@ -86,8 +86,8 @@ const Dashboard = () => {
         const formattedData = [
           { name: "Pending", value: pending },
           { name: "Dispatched", value: dispatched },
+          { name: "FullFilled", value: fullfilled },
           { name: "Cancelled", value: cancelled },
-          { name: "FullFilled", value: fullfilled }
         ];
 
         setBarChartData(formattedData);

@@ -12,8 +12,6 @@ import {
   TableHead,
   TableRow,
   Button,
-  Card,
-  CardContent,
   Select,
   InputLabel,
   FormControl,
@@ -21,7 +19,6 @@ import {
   Tooltip,
   TablePagination,
 } from "@mui/material";
-import { AccessTime, CheckCircle, Cancel } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   deleteDataById,
@@ -29,27 +26,27 @@ import {
   updateData,
 } from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
-import { showSuccessToast } from "../../components/toast/toast";
 import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { showSuccessToast } from "../../components/toast/toast";
 import { ContentCopy } from "@mui/icons-material";
 import { SearchContext } from "../../context/context";
 import DatePickerComp from "../../components/datePicker/datePicker";
 
 const OrderDetailsPage = () => {
-  const [products, setProducts] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState("All");
-  const [filteredData, setFilteredData] = useState([]);
   const [tooltipText, setTooltipText] = useState("Copy order ID");
+  const [products, setProducts] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [disabledButtons, setDisabledButtons] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [disabledButtons, setDisabledButtons] = useState({});
-  const location = useLocation();
   const { selectedDateByCalendar, orderStatus } = location.state || status;
-
-  const navigate = useNavigate();
   const { searchQuery, selectedDate } = useContext(SearchContext);
 
   useEffect(() => {
@@ -96,9 +93,6 @@ const OrderDetailsPage = () => {
         if (!response || !response.result) {
           throw new Error("No data found");
         }
-
-        console.log(response);
-
         const initialDisabledButtons = response.result.reduce((acc, order) => {
           acc[order._id] = {
             Fullfilled: order.orderStatus === "Fullfilled",
@@ -128,17 +122,6 @@ const OrderDetailsPage = () => {
       setLoading(false);
     };
   }, []);
-
-  const totalOrders = products.length;
-  const pendingOrders = products.filter(
-    (order) => order.orderStatus === "Pending"
-  ).length;
-  const dispatchedOrders = products.filter(
-    (order) => order.orderStatus === "Dispatched"
-  ).length;
-  const cancelledOrders = products.filter(
-    (order) => order.orderStatus === "Cancelled"
-  ).length;
 
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
@@ -202,7 +185,7 @@ const OrderDetailsPage = () => {
         if (orderToUpdate) {
           const updatedOrder = {
             ...orderToUpdate,
-            orderStatus: newStatus,
+            newStatus: newStatus,
           };
 
           setDisabledButtons((prev) => ({
@@ -215,7 +198,7 @@ const OrderDetailsPage = () => {
           }));
 
           let response = await updateData(
-            `billing-status/${updatedOrder._id}`,
+            `billing-status/${orderId}`,
             updatedOrder
           );
 
@@ -232,9 +215,9 @@ const OrderDetailsPage = () => {
             setDisabledButtons((prev) => ({
               ...prev,
               [orderId]: {
-                Fullfilled: newStatus === "Fullfilled", 
+                Fullfilled: newStatus === "Fullfilled",
                 Dispatched:
-                  newStatus === "Dispatched" || newStatus === "Fullfilled", 
+                  newStatus === "Dispatched" || newStatus === "Fullfilled",
                 Cancelled: newStatus === "Cancelled",
               },
             }));
@@ -285,6 +268,21 @@ const OrderDetailsPage = () => {
       } catch (error) {
         console.error(`Error deleting`, error);
       }
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Fullfilled":
+        return "#4caf50";
+      case "Pending":
+        return "#ff9800"; 
+      case "Cancelled":
+        return "#f44336";
+      case "Dispatched":
+        return "#2196f3";
+      default:
+        return "#9e9e9e"; 
     }
   };
 
@@ -362,7 +360,20 @@ const OrderDetailsPage = () => {
                       {new Date(order.orderDate).toLocaleDateString()}
                     </TableCell>
                     <TableCell>{`${order?.address}, ${order?.apartment}, ${order?.postCode}`}</TableCell>
-                    <TableCell>{order.orderStatus}</TableCell>
+                    <TableCell>
+                      <span
+                        style={{
+                          backgroundColor: getStatusColor(order.orderStatus),
+                          borderRadius: "20px",
+                          padding: "10px",
+                          color: "white",
+                          textAlign: "center",
+                        }}
+                      >
+                        {order.orderStatus}
+                      </span>
+                    </TableCell>
+
                     <TableCell>
                       <Box display="flex" flexDirection="row" flexWrap="nowrap">
                         <Button

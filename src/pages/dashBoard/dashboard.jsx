@@ -27,10 +27,9 @@ import {
   CheckCircle,
   Cancel,
   AccessTime,
-  MonetizationOn,
 } from "@mui/icons-material";
 import FullCalendarComponent from "../../components/calendar/calendar";
-import { format, parseISO } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
@@ -52,7 +51,6 @@ const Dashboard = () => {
     const fetchDataFromApi = async () => {
       try {
         const response = await fetchData("billing-details");
-
         const respons2 = await fetchData("total-sales/fulfilled");
         const products = response.result;
         setTotalSales(respons2.totalSales);
@@ -76,7 +74,6 @@ const Dashboard = () => {
         setDispatchedOrders(dispatched);
         setCancelledOrders(cancelled);
         setFullfilledOrders(fullfilled);
-
         setOrders(products);
 
         const formattedData = [
@@ -89,30 +86,29 @@ const Dashboard = () => {
 
         const dailyData = products.reduce((acc, order) => {
           const orderDate = parseISO(order.orderDate);
-          const dayOfMonth = format(orderDate, "d");
-          if (["1", "5", "10", "15", "20", "25", "30"].includes(dayOfMonth)) {
-            if (!acc[dayOfMonth]) {
-              acc[dayOfMonth] = 0;
-            }
-            acc[dayOfMonth] += 1;
+        
+          if (isValid(orderDate)) {
+            const dayOfMonth = format(orderDate, "d");  
+            acc[dayOfMonth] = (acc[dayOfMonth] || 0) + 1;
+          } else {
+            console.warn(`Invalid date format: ${order.orderDate}`);
           }
           return acc;
         }, {});
-
-        const days = ["1", "5", "10", "15", "20", "25", "30"];
-        const dailyOrderArray = days.map((day) => ({
+        
+        const daysInMonth = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+        const dailyOrderArray = daysInMonth.map((day) => ({
           name: `Day ${day}`,
           value: dailyData[day] || 0,
         }));
-
-        setDailyOrderData(dailyOrderArray);
+        
+        setDailyOrderData(dailyOrderArray);        
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchDataFromApi();
   }, []);
 
@@ -168,7 +164,7 @@ const Dashboard = () => {
                       style={{ fontSize: 40, color: "white", marginRight: 10, marginLeft: 10 }}
                     />
                   ),
-                  onClick: () => handleCardClick("TotalSales"),
+                  // onClick: () => handleCardClick("TotalSales"),
                 },
                 {
                   label: "Total Orders",

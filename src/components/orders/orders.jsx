@@ -18,18 +18,18 @@ import COD from "../../assets/images/cod.jpg";
 import EditMeasurementsModal from "../modal/editModal";
 import { showSuccessToast } from "../toast/toast";
 
-const getStatusColor = (status) => {
-  switch (status) {
-    case "Pending":
-      return { color: "#FFC107", text: "Pending" };
-    case "Dispatched":
-      return { color: "#4CAF50", text: "Dispatched" };
-    case "Cancelled":
-      return { color: "#F44336", text: "Cancelled" };
-    default:
-      return { color: "#000", text: status };
-  }
-};
+// const getStatusColor = (status) => {
+//   switch (status) {
+//     case "Pending":
+//       return { color: "#FFC107", text: "Pending" };
+//     case "Dispatched":
+//       return { color: "#4CAF50", text: "Dispatched" };
+//     case "Cancelled":
+//       return { color: "#F44336", text: "Cancelled" };
+//     default:
+//       return { color: "#000", text: status };
+//   }
+// };
 
 const OrderDetailPage = () => {
   const { orderId } = useParams();
@@ -95,6 +95,21 @@ const OrderDetailPage = () => {
       showSuccessToast("Data updated successfully.");
     } catch (error) {
       console.error("Error updating data:", error);
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Fullfilled":
+        return "#4caf50";
+      case "Pending":
+        return "#ff9800";
+      case "Cancelled":
+        return "#f44336";
+      case "Dispatched":
+        return "#2196f3";
+      default:
+        return "#9e9e9e";
     }
   };
 
@@ -164,11 +179,15 @@ const OrderDetailPage = () => {
                       <Typography
                         variant="body1"
                         sx={{
-                          color: getStatusColor(orderDetails.orderStatus).color,
-                          fontWeight: "bold",
+                          backgroundColor: getStatusColor(orderDetails.orderStatus),
+                          borderRadius: "20px",
+                          padding: "10px",
+                          color: "white",
+                          textAlign: "center",
+                          width: "50%"
                         }}
                       >
-                        {getStatusColor(orderDetails.orderStatus).text}
+                        {orderDetails.orderStatus}
                       </Typography>
                     </Grid>
                   )}

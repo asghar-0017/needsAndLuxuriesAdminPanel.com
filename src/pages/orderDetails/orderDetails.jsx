@@ -529,7 +529,8 @@ const OrderDetailsPage = () => {
                           onClick={() =>
                             handleOrderStatusChange(order._id, "Cancelled")
                           }
-                          disabled={disabledButtons[order._id]?.Cancelled}
+                          disabled={disabledButtons[order._id]?.Cancelled||
+                            disabledButtons[order._id]?.Fullfilled}
                         >
                           Cancel
                         </Button>

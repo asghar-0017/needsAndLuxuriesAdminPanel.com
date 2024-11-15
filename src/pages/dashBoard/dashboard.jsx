@@ -116,7 +116,7 @@ const Dashboard = () => {
         const dailyOrderArray = daysInMonth.map((day) => ({
           name: `Day ${day}`,
           orders: dailyData.orders[day] || 0,
-          sales: dailyData.sales[day] || 0,
+          fullfilled: dailyData.sales[day] || 0,
         }));
 
         setDailyOrderData(dailyOrderArray);
@@ -282,7 +282,7 @@ const Dashboard = () => {
             <Grid container spacing={5}>
               <Grid item xs={12} md={7}>
                 <Typography variant="h6" align="center" gutterBottom>
-                Orders and Sales by Day
+                Total and Fullfilled Orders of {new Date().toLocaleString('default', { month: 'long' })}
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart
@@ -301,7 +301,7 @@ const Dashboard = () => {
                     />
                     <Line
                       type="monotone"
-                      dataKey="sales"
+                      dataKey="fullfilled"
                       stroke="#82ca9d"
                       fill="#82ca9d"
                       connectNulls

@@ -126,7 +126,7 @@ const ProductForm = ({
     if(data.category != "Watches") formData.append(
       "subCategory",
       data.subCategory
-    );
+    )
 
     // formData.append(
     //   "SelectedCategory",

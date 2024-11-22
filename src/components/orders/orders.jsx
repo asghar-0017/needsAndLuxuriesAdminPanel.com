@@ -290,11 +290,11 @@ const OrderDetailPage = () => {
                     {`Quantity: ${product.quantity}`}
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                    {`Price: Rs ${product.price.toFixed(2)}`}
+                    {`Price: $${product.price.toFixed(2)}`}
                   </Typography>
                   {product.stitchedPrice && (
                     <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                      {`Stitched Price: Rs ${product.stitchedPrice.toFixed(2)}`}
+                      {`Stitched Price: $${product.stitchedPrice.toFixed(2)}`}
                     </Typography>
                   )}
                   {product.isStitching &&
@@ -598,7 +598,7 @@ const OrderDetailPage = () => {
                 </Button>
               )}
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                {`Total Price: Rs ${totalPrice.toFixed(2)}`}
+                {`Total Price: $${totalPrice.toFixed(2)}`}
               </Typography>
             </Box>
           </Paper>

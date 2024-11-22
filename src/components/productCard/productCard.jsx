@@ -125,8 +125,8 @@ const ProductCard = ({ product }) => {
               variant="h6"
               sx={{ marginRight: 1, fontWeight: "bold" }}>
               {product.newprice
-                ? `Rs ${product.newprice.toFixed(0)}`
-                : `Rs ${product.price.toFixed(0)}`}
+                ? `$${product.newprice.toFixed(0)}`
+                : `$${product.price.toFixed(0)}`}
             </Typography>
             {product.newprice && (
               <Typography
@@ -137,7 +137,7 @@ const ProductCard = ({ product }) => {
                   fontSize: "14px",
                   paddingTop: "1px"
                 }}>
-                Rs {product.price.toFixed(0)}
+                $ {product.price.toFixed(0)}
               </Typography>
             )}
           </div>

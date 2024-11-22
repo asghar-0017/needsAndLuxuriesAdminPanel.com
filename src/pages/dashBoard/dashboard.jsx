@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import { fetchData } from "../../config/apiServices/apiServices";
 import Loader from "../../components/loader/loader";
-import { FaRupeeSign } from "react-icons/fa6";
+import { BsCurrencyDollar } from "react-icons/bs";
 import { AiOutlineFileDone } from "react-icons/ai";
 import { SiVirustotal } from "react-icons/si";
 import {
@@ -177,7 +177,7 @@ const Dashboard = () => {
                   value: totalSales.toFixed(2),
                   color: "#a5d6a7",
                   icon: (
-                    <FaRupeeSign
+                    <BsCurrencyDollar
                       style={{
                         fontSize: 40,
                         color: "white",

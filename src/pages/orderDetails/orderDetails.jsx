@@ -410,7 +410,7 @@ const OrderDetailsPage = () => {
                     Total Sales
                   </Typography>
                   <Typography variant="h6" component="div" color="primary">
-                    ${sales.toFixed(2)}
+                    ${sales.toFixed()}
                   </Typography>
                 </Box>
               )}

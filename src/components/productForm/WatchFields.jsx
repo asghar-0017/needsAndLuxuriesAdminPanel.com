@@ -267,23 +267,42 @@ export default function WatchFields({
         />
       </Grid>
 
-      {isSale && (
+      {isSale &&  (
         <Grid item xs={12} md={10}>
           <TextField
-            {...register("discountprice")}
-            label="Discount Percentage"
-            type="number"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            error={!!errors.discountprice}
-            helperText={
-              errors.discountPrice?.message || ""
-            }
-            inputProps={{ min: 0, max: 100 }}
-          />
+  {...register("discountPrice", {
+    valueAsNumber: true,
+    required: isSale && "Discount Price is required",
+  })}
+  label="Discount Percentage"
+  type="number"
+  defaultValue={initialValues.discountPrice} 
+  variant="outlined"
+  fullWidth
+  margin="normal"
+  error={!!errors.discountPrice}
+  helperText={errors.discountPrice?.message || ""}
+  inputProps={{ min: 0, max: 100 }}
+/>
         </Grid>
       )}
+
+{/* 
+<TextField
+  {...register("discountPrice", {
+    valueAsNumber: true,
+    required: isSale && "Discount Price is required", // Only required if on sale
+  })}
+  label="Discount Percentage"
+  type="number"
+  defaultValue={initialValues.discountPrice || 0} // Set a default value
+  variant="outlined"
+  fullWidth
+  margin="normal"
+  error={!!errors.discountPrice}
+  helperText={errors.discountPrice?.message || ""}
+  inputProps={{ min: 0, max: 100 }}
+/> */}
 
       <Grid item xs={12} md={12}>
         <FormControlLabel

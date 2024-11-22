@@ -342,7 +342,7 @@ export default function ClothFields({
                   initialValues.discountprice
                 ) {
                   setValue(
-                    "discountPrice",
+                    "discountprice",
                     initialValues.discountprice
                   );
                 } else {
@@ -359,14 +359,14 @@ export default function ClothFields({
       {isSale && (
         <Grid item xs={12} md={12}>
           <TextField
-            {...register("discountPrice")}
+            {...register("discountprice")}
             label="Discount Percentage"
             type="number"
             variant="outlined"
             fullWidth
             margin="normal"
             onChange={handleDiscountPriceChange}
-            error={!!errors.discountPrice}
+            error={!!errors.discountprice}
             helperText={
               errors.discountPrice
                 ? errors.discountPrice.message

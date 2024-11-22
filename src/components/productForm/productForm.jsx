@@ -120,6 +120,7 @@ const ProductForm = ({
         "discountprice",
         data.discountPrice
       );
+      {console.log("Discount Price",data.discountPrice)}
     formData.append("sale", isSale);
     formData.append("category", data.category);
     if(data.category != "Watches") formData.append(
